@@ -1,0 +1,21 @@
+module.exports = {
+  productionSourceMap: false,
+
+  devServer: {
+    port: 4001
+  },
+
+  configureWebpack: {
+    devtool: 'source-map'
+  },
+
+  chainWebpack: config => {
+    const svgRule = config.module.rule('svg');
+
+    svgRule.uses.clear();
+
+    svgRule
+      .use('vue-svg-loader')
+      .loader('vue-svg-loader');
+  }
+};
