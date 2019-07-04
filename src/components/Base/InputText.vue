@@ -50,6 +50,7 @@ export default {
     inputId: ''
   }),
   mounted() {
+    // eslint-disable-next-line no-underscore-dangle
     this.inputId = `input-${this._uid}`;
   },
   methods: {
