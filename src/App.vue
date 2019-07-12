@@ -11,11 +11,6 @@
       </div>
     </transition>
 
-    <!--
-    Отдельный портал для отображения успешной отправки, потому что
-    там есть выбор файла который может гененировать ошибку
-    -->
-    <portal-target name = 'FormModalSendSuccess' />
     <portal-target name = 'formModal' />
 
     <FormModal

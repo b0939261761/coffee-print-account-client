@@ -1,9 +1,9 @@
 <template>
-  <div class = 'select-device'>
+  <div class = 'login'>
     <SelectLanguage />
 
     <form
-      class = 'select-device__form'
+      class = 'login__form'
       @submit.prevent = 'onSubmit'
     >
       <InputText
@@ -21,8 +21,8 @@
         :label = 'passwordText'
       />
 
+      <!-- :disabled = '!login || !password' -->
       <BtnSignIn
-        :disabled = '!login || !password'
         @click = 'onSubmit'
       />
     </form>
@@ -55,18 +55,14 @@ export default {
   },
   methods: {
     onSubmit() {
-      // this.$router.push({ name: 'selectPictureIndex', params: { code: this.code } });
-      // this.code = '';
-    },
-    onGoSelectPicture() {
-      // this.$router.push({ name: 'selectPictureIndex', params: { code: this.$store.state.device.code } });
+      this.$router.push({ name: 'cartridges' });
     }
   }
 };
 </script>
 
 <style scoped>
-.select-device {
+.login {
   position: relative;
   display: flex;
   justify-content: center;
@@ -75,7 +71,7 @@ export default {
   height: 100%;
 }
 
-.select-device__form {
+.login__form {
   max-width: 20rem;
 }
 </style>

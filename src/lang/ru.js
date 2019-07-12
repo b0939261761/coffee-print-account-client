@@ -1,5 +1,8 @@
 export default {
   email: 'Email',
   password: 'Пароль',
-  signIn: 'Войти'
+  signIn: 'Войти',
+  printed: 'Printed',
+  balance: 'Balance',
+  serialNumber: 'S/N'
 };

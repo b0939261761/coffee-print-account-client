@@ -1,15 +1,15 @@
 <template>
   <FormModal @cancel = 'onCancel'>
     <template slot = 'header'>
-      {{ formModalSendSuccessTitle }}
+      {{ modalTitleRemoveText }}
     </template>
 
     <template slot = 'body'>
-      {{ formModalSendSuccessBody }}
+      {{ modalMessageRemoveText }}
     </template>
 
     <template slot ='footer'>
-      <BtnSelectPicture
+      <BtnOk
         class = 'btn-selected-picture--margin'
         @click = 'onCancel'
       />
@@ -23,23 +23,29 @@
 </template>
 
 <script>
-import BtnSelectPicture from '@/components/SelectPicture/BtnSelectPicture.vue';
-import BtnCancel from '@/components/Common/BtnCancel.vue';
 import FormModal from '@/components/Common/FormModal.vue';
+import BtnOk from '@/components/Common/BtnOk.vue';
+import BtnCancel from '@/components/Common/BtnCancel.vue';
 
 export default {
-  name: 'FormModalSendSuccess',
+  name: 'FormModalRemoveCartridge',
   components: {
     FormModal,
-    BtnSelectPicture,
+    BtnOk,
     BtnCancel
   },
+  props: {
+    cartridgeCode: {
+      required: true,
+      type: String
+    }
+  },
   computed: {
-    formModalSendSuccessTitle() {
-      return this.$t('formModalSendSuccessTitle');
+    modalTitleRemoveText() {
+      return this.$t('modalTitleRemove');
     },
-    formModalSendSuccessBody() {
-      return this.$t('formModalSendSuccessBody');
+    modalMessageRemoveText() {
+      return this.$t('modalMessageRemove', [this.cartridgeCode]);
     }
   },
   methods: {

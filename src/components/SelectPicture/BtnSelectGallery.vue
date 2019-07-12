@@ -8,7 +8,7 @@
         xmlns = 'http://www.w3.org/2000/svg'
         viewBox = '0 0 576 512'
       >
-        <path
+        <pathFormModalRemoveCartridge
           d = 'M480 416v16c0 26.51-21.49 48-48 48H48c-26.51
                 0-48-21.49-48-48V176c0-26.51 21.49-48 48-48h16v208c0
                 44.112 35.888 80 80

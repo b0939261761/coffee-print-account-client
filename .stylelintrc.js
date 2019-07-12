@@ -24,7 +24,8 @@ module.exports = {
         'box-shadow',
         'background-color',
         'padding-top',
-        'height'
+        'height',
+        'max-height'
       ] }
     ],
 
