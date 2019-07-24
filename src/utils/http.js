@@ -28,6 +28,7 @@ http.interceptors.response.use(responseUse, responseError);
 // -------------------------
 
 export const getCartridges = () => http.get('/cartridges');
+export const removeCartridge = id => http.delete(`/cartridges/${id}`);
 
 export default {
   getCartridges

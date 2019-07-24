@@ -4,20 +4,20 @@
     @click = 'onClick'
   >
     <template #icon>
-      <IconSignIn />
+      <Icon />
     </template>
   </Btn>
 </template>
 
 <script>
-import IconSignIn from '@/assets/sign-in.svg';
 import Btn from '@/components/Base/Btn.vue';
+import Icon from '@/assets/sign-in.svg';
 
 export default {
   name: 'BtnSignIn',
   components: {
-    IconSignIn,
-    Btn
+    Btn,
+    Icon
   },
   computed: {
     label() {

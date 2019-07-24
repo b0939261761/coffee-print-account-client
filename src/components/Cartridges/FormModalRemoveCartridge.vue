@@ -11,7 +11,7 @@
     <template slot ='footer'>
       <BtnOk
         class = 'btn-selected-picture--margin'
-        @click = 'onCancel'
+        @click = 'onOk'
       />
 
       <BtnCancel
@@ -49,6 +49,9 @@ export default {
     }
   },
   methods: {
+    onOk() {
+      this.$emit('ok');
+    },
     onCancel() {
       this.$emit('cancel');
     }

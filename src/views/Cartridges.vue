@@ -1,119 +1,52 @@
 <template>
   <div class = 'cartridges'>
-    <table class = 'cartridges-table'>
-      <colgroup>
-        <col class = 'cartridges-table__col-serial-number'>
-        <col class = 'cartridges-table__col-number'>
-        <col class = 'cartridges-table__col-number'>
-        <col class = 'cartridges-table__col-number'>
-        <col class = 'cartridges-table__col-active'>
-      </colgroup>
+    <div class = 'cartridges__header'>
+      <InputText
+        v-model = 'cartridgeCode'
+        placeholder = 'XXXXXXXXX'
+        :label = 'serialNumberText'
+        inputmode = 'number'
+      />
+    </div>
 
-      <thead>
-        <tr class = 'cartridges-table__head-row'>
-          <th
-            class = 'cartridges-table__head-cell'
-            v-text='serialNumberText'
-          />
-          <th
-            class = 'cartridges-table__head-cell'
-            v-text='quantityText'
-          />
-          <th
-            class = 'cartridges-table__head-cell'
-            v-text='printedText'
-          />
-          <th
-            class = 'cartridges-table__head-cell'
-            v-text='balanceText'
-          />
-          <th
-            class = 'cartridges-table__head-cell'
-            v-text='activeText'
-          />
-        </tr>
-      </thead>
-
-      <template v-for = 'item in items'>
-        <tr
-          :key = '`row-main-${item.id}`'
-          class = 'cartridges-table__body-row'
-          :data-id = 'item.id'
-          @click = 'onRowClick'
-        >
-          <td
-            class = 'cartridges-table__body-cell'
-            v-text = 'item.code'
-          />
-          <td
-            class = 'cartridges-table__body-cell'
-            v-text = 'item.quantity'
-          />
-          <td
-            class = 'cartridges-table__body-cell'
-            v-text = 'item.printed'
-          />
-          <td
-            class = 'cartridges-table__body-cell'
-            v-text = 'item.balance'
-          />
-          <td
-            class = 'cartridges-table__body-cell'
-            v-text = 'item.active'
-          />
-        </tr>
-
-        <tr
-          :key = '`row-additional-${item.id}`'
-          class = 'cartridges-table__row-additional'
-        >
-          <td colspan = '5'>
-            <transition name = 'cartridges-table__transition-visible-additional'>
-              <div
-                v-if = 'item.visibleAdditional'
-                class = 'cartridges-table__wrapper-cartridge-table'
-              >
-                <CartridgeTable
-                  :cartridge-code = 'item.code'
-                  :last-device = 'item.lastDevice'
-                  :last-active = 'item.lastActive'
-                />
-              </div>
-            </transition>
-          </td>
-        </tr>
-      </template>
-    </table>
+    <CartridgesTable
+      :items = 'itemsFiltered'
+      :show-modal-remove = 'showModalRemove'
+      @remove = 'onRemove'
+      @showModalRemove = 'onShowModalRemove'
+    />
+    <div class = 'cartridges__footer'>
+      <BtnBack />
+    </div>
   </div>
 </template>
 
 <script>
-import { getCartridges } from '@/utils/http';
-import CartridgeTable from '@/components/Cartridges/CartridgeTable.vue';
+import { getCartridges, removeCartridge } from '@/utils/http';
+import CartridgesTable from '@/components/Cartridges/CartridgesTable.vue';
+import BtnBack from '@/components/Common/BtnBack.vue';
+import InputText from '@/components/Base/InputText.vue';
 
 export default {
   name: 'Cartridges',
   components: {
-    CartridgeTable
+    CartridgesTable,
+    InputText,
+    BtnBack
   },
   data: () => ({
-    items: []
+    items: [],
+    cartridgeCode: '',
+    showModalRemove: false
   }),
   computed: {
     serialNumberText() {
       return this.$t('serialNumber');
     },
-    quantityText() {
-      return this.$t('quantity');
-    },
-    printedText() {
-      return this.$t('printed');
-    },
-    balanceText() {
-      return this.$t('balance');
-    },
-    activeText() {
-      return this.$t('active');
+    itemsFiltered() {
+      return this.cartridgeCode
+        ? this.items.filter(el => el.code.includes(this.cartridgeCode))
+        : this.items;
     }
   },
   async created() {
@@ -128,10 +61,13 @@ export default {
     }));
   },
   methods: {
-    onRowClick(event) {
-      const id = +event.currentTarget.dataset.id;
-      const item = this.items.find(el => el.id === id);
-      item.visibleAdditional = !item.visibleAdditional;
+    async onRemove(id) {
+      await removeCartridge(id);
+      this.items = this.items.filter(el => el.id !== id);
+      this.showModalRemove = false;
+    },
+    onShowModalRemove(status) {
+      this.showModalRemove = status;
     }
   }
 };
@@ -139,71 +75,25 @@ export default {
 
 <style scoped>
 .cartridges {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
-  padding: .5rem;
-  overflow-y: auto;
-  background-color: white;
+  background-color: #f3b4ac;
 }
 
-.cartridges-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-  font-size: 1.2rem;
-  background-color: white;
+.cartridges__header {
+  /* margin-bottom: -1rem; */
+  padding: 1rem 1rem 0;
+  border-radius: .5rem .5rem 0 0;
+  box-shadow: inset .2rem -.2rem 1rem 0 rgba(0, 0, 0, .2);
 }
 
-.cartridges-table__col-serial-number {
-  width: 7rem;
-}
-
-.cartridges-table__col-number {
-  width: 5rem;
-}
-
-.cartridges-table__col-active {
-  width: 2rem;
-}
-
-.cartridges-table__head-row {
-  height: 5.6rem;
-  border-bottom: .1rem solid rgba(0, 0, 0, .12);
-}
-
-.cartridges-table__head-cell {
-  overflow: hidden;
-  color: rgba(0, 0, 0, .54);
-}
-
-.cartridges-table__body-row {
-  cursor: pointer;
-}
-
-.cartridges-table__body-cell {
-  padding: .5rem;
-  font-size: 1.3rem;
-  color: rgba(0, 0, 0, .87);
-}
-
-.cartridges-table__row-additional {
-  border-bottom: .1rem solid rgba(0, 0, 0, .5);
-}
-
-.cartridges-table__wrapper-cartridge-table {
-  max-height: 10rem;
-}
-
-.cartridges-table__transition-visible-additional-enter-active,
-.cartridges-table__transition-visible-additional-leave-active {
-  transition:
-    max-height .3s linear,
-    opacity .3s linear;
-}
-
-.cartridges-table__transition-visible-additional-enter,
-.cartridges-table__transition-visible-additional-leave-to {
-  max-height: 0;
-  opacity: 0;
+.cartridges__footer {
+  display: flex;
+  margin-bottom: -1rem;
+  padding: 1rem 1rem 0;
+  border-radius: .5rem .5rem 0 0;
+  box-shadow: inset .2rem -.2rem 1rem 0 rgba(0, 0, 0, .2);
 }
 </style>

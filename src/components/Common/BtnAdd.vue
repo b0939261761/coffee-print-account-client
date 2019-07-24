@@ -1,27 +1,27 @@
 <template>
-  <BtnTable
-    :title = 'title'
+  <Btn
+    :label = 'label'
     @click = 'onClick'
   >
     <template #icon>
       <Icon />
     </template>
-  </BtnTable>
+  </Btn>
 </template>
 
 <script>
-import BtnTable from '@/components/Base/BtnTable.vue';
-import Icon from '@/assets/edit.svg';
+import Btn from '@/components/Base/Btn.vue';
+import Icon from '@/assets/plus.svg';
 
 export default {
-  name: 'BtnTableEdit',
+  name: 'BtnAdd',
   components: {
-    BtnTable,
+    Btn,
     Icon
   },
   computed: {
-    title() {
-      return this.$t('edit');
+    label() {
+      return this.$t('add');
     }
   },
   methods: {

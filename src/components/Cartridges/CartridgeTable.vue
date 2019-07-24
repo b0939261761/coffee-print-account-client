@@ -30,7 +30,9 @@
         >
           <BtnTableRemove
             :cartridge-code = 'cartridgeCode'
-            @click = 'onRemove'
+            :show-modal = 'showModalRemove'
+            @remove = 'onRemove'
+            @showModal = 'onShowModalRemove'
           />
         </td>
       </tr>
@@ -61,6 +63,10 @@ export default {
     BtnTableRemove
   },
   props: {
+    id: {
+      required: true,
+      type: Number
+    },
     cartridgeCode: {
       required: true,
       type: String
@@ -72,6 +78,10 @@ export default {
     lastActive: {
       required: true,
       validator: prop => typeof prop === 'string' || prop === null
+    },
+    showModalRemove: {
+      required: true,
+      type: Boolean
     }
   },
   computed: {
@@ -89,8 +99,11 @@ export default {
     onEdit() {
       this.$emit('onEdit');
     },
-    onRemove() {
-      this.$emit('onRemove');
+    async onRemove() {
+      return this.$emit('remove', this.id);
+    },
+    onShowModalRemove(status) {
+      this.$emit('showModalRemove', status);
     }
   }
 };

@@ -12,5 +12,7 @@ export default {
   edit: 'Edit',
   remove: 'Remove',
   modalTitleRemove: 'Удалить запись?',
-  modalMessageRemove: 'Картридж [{0}] будет удален'
+  modalMessageRemove: 'Картридж [{0}] будет удален',
+  add: 'Добавить',
+  back: 'Назад'
 };

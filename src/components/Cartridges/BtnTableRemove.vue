@@ -1,40 +1,45 @@
 <template>
   <BtnTable
     :title = 'title'
-    @click = 'onClick'
+    @click = 'onShowModal'
   >
     <template #icon>
-      <IconTrashAlt />
+      <Icon />
     </template>
 
     <portal
-      v-if = 'modalOpen'
+      v-if = 'showModal'
       to = 'formModal'
     >
       <FormModalRemoveCartridge
         :cartridge-code = 'cartridgeCode'
-        @cancel = 'modalOpen = false'
+        @ok = 'onRemove'
+        @cancel = 'onHideModal'
       />
     </portal>
   </BtnTable>
 </template>
 
 <script>
-import IconTrashAlt from '@/assets/trash-alt.svg';
 import BtnTable from '@/components/Base/BtnTable.vue';
+import Icon from '@/assets/trash-alt.svg';
 import FormModalRemoveCartridge from '@/components/Cartridges/FormModalRemoveCartridge.vue';
 
 export default {
   name: 'BtnTableRemove',
   components: {
-    IconTrashAlt,
     BtnTable,
+    Icon,
     FormModalRemoveCartridge
   },
   props: {
     cartridgeCode: {
       required: true,
       type: String
+    },
+    showModal: {
+      required: true,
+      type: Boolean
     }
   },
   data: () => ({
@@ -46,9 +51,14 @@ export default {
     }
   },
   methods: {
-    onClick() {
-      this.modalOpen = true;
-      this.$emit('click');
+    onShowModal() {
+      this.$emit('showModal', true);
+    },
+    onHideModal() {
+      this.$emit('showModal', false);
+    },
+    onRemove() {
+      this.$emit('remove');
     }
   }
 };

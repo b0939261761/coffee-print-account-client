@@ -1,6 +1,7 @@
 <template>
   <BtnTable
     :title = 'title'
+    color-theme = 'outline'
     @click = 'onClick'
   >
     <template #icon>
@@ -11,17 +12,17 @@
 
 <script>
 import BtnTable from '@/components/Base/BtnTable.vue';
-import Icon from '@/assets/edit.svg';
+import Icon from '@/assets/chevron-left.svg';
 
 export default {
-  name: 'BtnTableEdit',
+  name: 'BtnTablePrev',
   components: {
     BtnTable,
     Icon
   },
   computed: {
     title() {
-      return this.$t('edit');
+      return this.$t('previous');
     }
   },
   methods: {

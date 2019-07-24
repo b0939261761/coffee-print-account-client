@@ -24,7 +24,7 @@ export default {
   props: {
     colorTheme: {
       type: String || null,
-      validator: value => ['primary', 'dark', 'outline'].includes(value),
+      validator: value => ['primary', 'outline'].includes(value),
       default: 'primary'
     }
   },
@@ -125,9 +125,14 @@ export default {
 }
 
 .btn--outline {
+  background-color: rgba(0, 0, 0, 0);
+  fill: rgba(0, 0, 0, .87);
+}
+
+.btn:hover:enabled,
+.btn:focus:enabled {
   color: rgba(0, 0, 0, .87);
   background-color: #f5f5f5;
-  fill: rgba(0, 0, 0, .87);
 }
 
 .btn__wrapper-icon {
