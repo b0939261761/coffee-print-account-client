@@ -10,26 +10,35 @@
     <tbody>
       <tr class = 'cartridge-table__head-row'>
         <td
-          class = 'cartridge-table__head-cell'
-          v-text='coffeePrinterText'
+          :class = 'lastDevice ? "cartridge-table__head-cell" : "cartridge-table__body-cell"'
+          :rowspan = 'lastDevice ? 1 : 2'
+          v-text = 'lastDevice ? coffeePrinterText : ""'
         />
         <td
-          class = 'cartridge-table__head-cell'
-          v-text='lastActiveText'
+          :class = 'lastActive ? "cartridge-table__head-cell" : "cartridge-table__body-cell"'
+          :rowspan = 'lastActive ? 1 : 2'
+          v-text = 'lastActive ? lastActiveText : ""'
         />
 
         <td
           class = 'cartridge-table__body-cell'
           rowspan = '2'
         >
-          <BtnTableEdit @click = 'onEdit' />
+          <BtnTableEdit
+            :code = 'code'
+            :quantity = 'quantity'
+            :active = 'active'
+            :show-modal = 'showModalEdit'
+            @edit = 'onEdit'
+            @showModal = 'onShowModalEdit'
+          />
         </td>
         <td
           class = 'cartridge-table__body-cell'
           rowspan = '2'
         >
           <BtnTableRemove
-            :cartridge-code = 'cartridgeCode'
+            :code = 'code'
             :show-modal = 'showModalRemove'
             @remove = 'onRemove'
             @showModal = 'onShowModalRemove'
@@ -39,10 +48,12 @@
 
       <tr class = 'cartridge-table__body-row'>
         <td
+          v-if = 'lastDevice'
           class = 'cartridge-table__body-cell cartridge-table__body-cell--coffee-printer'
           v-text = 'lastDevice'
         />
         <td
+          v-if = 'lastActive'
           class = 'cartridge-table__body-cell'
           v-text = 'lastActiveToDate'
         />
@@ -67,9 +78,17 @@ export default {
       required: true,
       type: Number
     },
-    cartridgeCode: {
+    code: {
       required: true,
       type: String
+    },
+    quantity: {
+      required: true,
+      type: Number
+    },
+    active: {
+      required: true,
+      type: Boolean
     },
     lastDevice: {
       required: true,
@@ -80,6 +99,10 @@ export default {
       validator: prop => typeof prop === 'string' || prop === null
     },
     showModalRemove: {
+      required: true,
+      type: Boolean
+    },
+    showModalEdit: {
       required: true,
       type: Boolean
     }
@@ -96,14 +119,17 @@ export default {
     }
   },
   methods: {
-    onEdit() {
-      this.$emit('onEdit');
+    onRemove() {
+      this.$emit('remove', this.id);
     },
-    async onRemove() {
-      return this.$emit('remove', this.id);
+    onEdit(obj) {
+      this.$emit('edit', { id: this.id, ...obj });
     },
     onShowModalRemove(status) {
-      this.$emit('showModalRemove', status);
+      this.$emit('showModalRemove', status ? this.id : 0);
+    },
+    onShowModalEdit(status) {
+      this.$emit('showModalEdit', status ? this.id : 0);
     }
   }
 };

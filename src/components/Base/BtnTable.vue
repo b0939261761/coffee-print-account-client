@@ -129,8 +129,8 @@ export default {
   fill: rgba(0, 0, 0, .87);
 }
 
-.btn:hover:enabled,
-.btn:focus:enabled {
+.btn--outline:hover:enabled,
+.btn--outline:focus:enabled {
   color: rgba(0, 0, 0, .87);
   background-color: #f5f5f5;
 }

@@ -35,7 +35,7 @@ export default {
     BtnCancel
   },
   props: {
-    cartridgeCode: {
+    code: {
       required: true,
       type: String
     }
@@ -45,7 +45,7 @@ export default {
       return this.$t('modalTitleRemove');
     },
     modalMessageRemoveText() {
-      return this.$t('modalMessageRemove', [this.cartridgeCode]);
+      return this.$t('modalMessageRemove', [this.code]);
     }
   },
   methods: {

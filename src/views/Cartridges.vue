@@ -2,7 +2,7 @@
   <div class = 'cartridges'>
     <div class = 'cartridges__header'>
       <InputText
-        v-model = 'cartridgeCode'
+        v-model = 'code'
         placeholder = 'XXXXXXXXX'
         :label = 'serialNumberText'
         inputmode = 'number'
@@ -11,9 +11,12 @@
 
     <CartridgesTable
       :items = 'itemsFiltered'
-      :show-modal-remove = 'showModalRemove'
+      :active-remove-id = 'activeRemoveId'
+      :active-edit-id = 'activeEditId'
       @remove = 'onRemove'
+      @edit = 'onEdit'
       @showModalRemove = 'onShowModalRemove'
+      @showModalEdit = 'onShowModalEdit'
     />
     <div class = 'cartridges__footer'>
       <BtnBack />
@@ -22,7 +25,7 @@
 </template>
 
 <script>
-import { getCartridges, removeCartridge } from '@/utils/http';
+import { getCartridges, removeCartridge, updateCartridge } from '@/utils/http';
 import CartridgesTable from '@/components/Cartridges/CartridgesTable.vue';
 import BtnBack from '@/components/Common/BtnBack.vue';
 import InputText from '@/components/Base/InputText.vue';
@@ -36,38 +39,41 @@ export default {
   },
   data: () => ({
     items: [],
-    cartridgeCode: '',
-    showModalRemove: false
+    code: '',
+    activeRemoveId: 0,
+    activeEditId: 0
   }),
   computed: {
     serialNumberText() {
       return this.$t('serialNumber');
     },
     itemsFiltered() {
-      return this.cartridgeCode
-        ? this.items.filter(el => el.code.includes(this.cartridgeCode))
+      return this.code
+        ? this.items.filter(el => el.code.includes(this.code))
         : this.items;
     }
   },
   async created() {
     const response = await getCartridges();
-    const items = (response.data && response.data.items) || [];
-
-    this.items = items.map(el => ({
-      ...el,
-      active: el.active ? '\u2714' : '',
-      printed: el.quantity - el.balance,
-      visibleAdditional: false
-    }));
+    this.items = response.data || [];
   },
   methods: {
     async onRemove(id) {
       await removeCartridge(id);
       this.items = this.items.filter(el => el.id !== id);
-      this.showModalRemove = false;
+      this.onShowModalRemove(0);
     },
-    onShowModalRemove(status) {
-      this.showModalRemove = status;
+    async onEdit({ id, quantity, active }) {
+      const response = await updateCartridge({ id, quantity, active });
+      const index = this.items.findIndex(el => el.id === id);
+      this.$set(this.items, index, response.data);
+      this.onShowModalEdit(0);
+    },
+    onShowModalRemove(id) {
+      this.activeRemoveId = id;
+    },
+    onShowModalEdit(id) {
+      this.activeEditId = id;
     }
   }
 };

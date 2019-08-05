@@ -1,7 +1,7 @@
 <template>
   <div class='input-text'>
     <input
-      id = 'inputId'
+      :id = '$options.inputId'
       :value = 'value'
       :type = 'type'
       :placeholder = 'placeholder'
@@ -10,8 +10,8 @@
       @input = 'onInput'
     >
     <label
+      :for = '$options.inputId'
       class = 'label'
-      for = 'inputId'
       v-text = 'label'
     />
   </div>
@@ -22,7 +22,7 @@ export default {
   name: 'InputText',
   props: {
     value: {
-      type: String,
+      type: [String, Number],
       default: ''
     },
     type: {
@@ -30,11 +30,11 @@ export default {
       default: 'text'
     },
     placeholder: {
-      type: String || null,
+      validator: prop => typeof prop === 'string' || prop === null,
       default: null
     },
     label: {
-      type: String || null,
+      validator: prop => typeof prop === 'string' || prop === null,
       default: ''
     },
     mask: {
@@ -46,16 +46,14 @@ export default {
       default: null
     }
   },
-  data: () => ({
-    inputId: ''
-  }),
-  mounted() {
+  created() {
     // eslint-disable-next-line no-underscore-dangle
-    this.inputId = `input-${this._uid}`;
+    this.$options.inputId = this._uid;
   },
   methods: {
     onInput(event) {
-      this.$emit('input', event.target.value);
+      const { value } = event.target;
+      this.$emit('input', this.type === 'number' ? +value : value);
     }
   }
 };
@@ -72,6 +70,7 @@ export default {
 .input,
 .label {
   width: 100%;
+  margin-bottom: 1.5rem;
   padding: .6rem 1.2rem;
   font-size: 1.6rem;
 }
@@ -80,12 +79,12 @@ export default {
   position: absolute;
   top: 1.5rem;
   left: 0;
-  width: 125%;
+  width: 120%;
   overflow: hidden;
-  color: white;
+  color: #495057;
   white-space: nowrap;
   text-overflow: ellipsis;
-  transform: translateY(-2.3rem) scale(.8);
+  transform: translateY(-2.5rem) scale(.8);
   transform-origin: 0 0;
   transition:
     transform .3s cubic-bezier(.25, .8, .5, 1),
@@ -97,7 +96,6 @@ export default {
 .input {
   display: block;
   height: calc(3.6rem + .2rem);
-  margin: 0 0 1.5rem 0;
   color: #495057;
   background-color: #fff;
   background-clip: padding-box;

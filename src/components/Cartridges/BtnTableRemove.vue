@@ -12,7 +12,7 @@
       to = 'formModal'
     >
       <FormModalRemoveCartridge
-        :cartridge-code = 'cartridgeCode'
+        :code = 'code'
         @ok = 'onRemove'
         @cancel = 'onHideModal'
       />
@@ -33,7 +33,7 @@ export default {
     FormModalRemoveCartridge
   },
   props: {
-    cartridgeCode: {
+    code: {
       required: true,
       type: String
     },
@@ -42,9 +42,6 @@ export default {
       type: Boolean
     }
   },
-  data: () => ({
-    modalOpen: false
-  }),
   computed: {
     title() {
       return this.$t('remove');

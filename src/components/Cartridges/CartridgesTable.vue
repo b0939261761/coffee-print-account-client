@@ -35,11 +35,11 @@
           </tr>
         </thead>
 
-        <template v-for = 'item in itemsOnPage'>
+        <template v-for = '(item, index) in itemsOnPage'>
           <tr
             :key = '`row-main-${item.id}`'
             class = 'cartridges-table__body-row'
-            :data-id = 'item.id'
+            :data-index = 'index'
             @click = 'onRowClick'
           >
             <td
@@ -60,7 +60,7 @@
             />
             <td
               class = 'cartridges-table__body-cell'
-              v-text = 'item.active'
+              v-text = 'item.activeSymbol'
             />
           </tr>
 
@@ -71,17 +71,22 @@
             <td colspan = '5'>
               <transition name = 'cartridges-table__transition-visible-additional'>
                 <div
-                  v-if = 'item.visibleAdditional'
+                  v-if = 'visibleAdditionals[index]'
                   class = 'cartridges-table__wrapper-cartridge-table'
                 >
                   <CartridgeTable
                     :id = 'item.id'
-                    :cartridge-code = 'item.code'
+                    :code = 'item.code'
+                    :quantity = 'item.quantity'
+                    :active = 'item.active'
                     :last-device = 'item.lastDevice'
                     :last-active = 'item.lastActive'
-                    :show-modal-remove = 'showModalRemove'
+                    :show-modal-remove = 'item.id === activeRemoveId'
+                    :show-modal-edit = 'item.id === activeEditId'
                     @remove = 'onRemove'
+                    @edit = 'onEdit'
                     @showModalRemove = 'onShowModalRemove'
+                    @showModalEdit = 'onShowModalEdit'
                   />
                 </div>
               </transition>
@@ -125,16 +130,21 @@ export default {
   },
   props: {
     items: {
-      type: Array,
-      required: true
+      required: true,
+      type: Array
     },
-    showModalRemove: {
-      type: Boolean,
-      required: true
+    activeRemoveId: {
+      required: true,
+      type: Number
+    },
+    activeEditId: {
+      required: true,
+      type: Number
     }
   },
   data: () => ({
-    currentPage: 1
+    currentPage: 1,
+    visibleAdditionals: []
   }),
   computed: {
     serialNumberText() {
@@ -159,26 +169,43 @@ export default {
       return Math.ceil(this.items.length / ROWS_PER_PAGE) || 1;
     },
     itemsOnPage() {
-      return this.items.slice((this.currentPage - 1) * ROWS_PER_PAGE,
+      const items = this.items.slice((this.currentPage - 1) * ROWS_PER_PAGE,
         this.currentPage * ROWS_PER_PAGE);
+
+      return items.map(el => ({
+        ...el,
+        activeSymbol: el.active ? '\u2714' : '',
+        balance: el.quantity - el.printed
+      }));
     }
   },
   watch: {
     items() {
       this.currentPage = 1;
+    },
+    currentPage: {
+      immediate: true,
+      handler() {
+        this.visibleAdditionals = Array(ROWS_PER_PAGE);
+      }
     }
   },
   methods: {
     onRowClick(event) {
-      const id = +event.currentTarget.dataset.id;
-      const item = this.items.find(el => el.id === id);
-      item.visibleAdditional = !item.visibleAdditional;
+      const index = +event.currentTarget.dataset.index;
+      this.$set(this.visibleAdditionals, index, !this.visibleAdditionals[index]);
     },
     onRemove(id) {
       this.$emit('remove', id);
     },
-    onShowModalRemove(status) {
-      this.$emit('showModalRemove', status);
+    onEdit(obj) {
+      this.$emit('edit', obj);
+    },
+    onShowModalRemove(id) {
+      this.$emit('showModalRemove', id);
+    },
+    onShowModalEdit(id) {
+      this.$emit('showModalEdit', id);
     },
     onPrev() {
       --this.currentPage;

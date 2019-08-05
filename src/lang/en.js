@@ -13,6 +13,11 @@ export default {
   remove: 'Remove',
   modalTitleRemove: 'Удалить запись?',
   modalMessageRemove: 'Картридж [{0}] будет удален',
+  modalTitleEditCartridge: 'Картридж [{0}]',
   add: 'Добавить',
-  back: 'Назад'
+  back: 'Назад',
+  previous: 'Previous',
+  next: 'Next',
+  ok: 'Ok',
+  cancel: 'Cancel'
 };

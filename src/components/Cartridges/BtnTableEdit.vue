@@ -1,23 +1,57 @@
 <template>
   <BtnTable
     :title = 'title'
-    @click = 'onClick'
+    @click = 'onShowModal'
   >
     <template #icon>
       <Icon />
     </template>
+
+    <portal
+      v-if = 'showModal'
+      to = 'formModal'
+    >
+      <FormModalEditCartridge
+        :code = 'code'
+        :quantity = 'quantity'
+        :active = 'active'
+        @ok = 'onEdit'
+        @cancel = 'onHideModal'
+      />
+    </portal>
   </BtnTable>
 </template>
 
 <script>
 import BtnTable from '@/components/Base/BtnTable.vue';
 import Icon from '@/assets/edit.svg';
+import FormModalEditCartridge from '@/components/Cartridges/FormModalEditCartridge.vue';
+
 
 export default {
   name: 'BtnTableEdit',
   components: {
     BtnTable,
-    Icon
+    Icon,
+    FormModalEditCartridge
+  },
+  props: {
+    code: {
+      required: true,
+      type: String
+    },
+    quantity: {
+      required: true,
+      type: Number
+    },
+    active: {
+      required: true,
+      type: Boolean
+    },
+    showModal: {
+      required: true,
+      type: Boolean
+    }
   },
   computed: {
     title() {
@@ -25,8 +59,14 @@ export default {
     }
   },
   methods: {
-    onClick() {
-      this.$emit('click');
+    onShowModal() {
+      this.$emit('showModal', true);
+    },
+    onHideModal() {
+      this.$emit('showModal', false);
+    },
+    onEdit(obj) {
+      this.$emit('edit', obj);
     }
   }
 };
