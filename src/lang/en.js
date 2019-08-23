@@ -3,12 +3,12 @@ export default {
   password: 'Password',
   signIn: 'Sign me in!',
   serialNumber: 'S/N',
-  quantity: 'Quantity',
-  balance: 'Balance',
-  printed: 'Printed',
+  quantityResource: 'Ресурс',
+  quantityBalance: 'Остаток',
+  quantityPrinted: 'Напечатано',
   active: 'Active',
   coffeePrinter: 'Coffee printer',
-  lastActive: 'Last active',
+  lastActive: 'Активность',
   edit: 'Edit',
   remove: 'Remove',
   modalTitleRemove: 'Удалить запись?',
@@ -19,5 +19,10 @@ export default {
   previous: 'Previous',
   next: 'Next',
   ok: 'Ok',
-  cancel: 'Cancel'
+  cancel: 'Cancel',
+  cartridges: 'Картриджи',
+  devices: 'Принтера',
+  device: 'Принтер',
+  code: 'Код',
+  version: 'Версия'
 };

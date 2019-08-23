@@ -4,18 +4,15 @@
       <InputText
         v-model = 'code'
         placeholder = 'XXXXXXXXX'
-        :label = 'serialNumberText'
+        :label = 'codeText'
         inputmode = 'number'
       />
     </div>
 
-    <CartridgesTable
+    <DevicesTable
       :items = 'itemsFiltered'
-      :active-remove-id = 'activeRemoveId'
       :active-edit-id = 'activeEditId'
-      @remove = 'onRemove'
       @edit = 'onEdit'
-      @showModalRemove = 'onShowModalRemove'
       @showModalEdit = 'onShowModalEdit'
     />
     <div class = 'cartridges__footer'>
@@ -25,27 +22,26 @@
 </template>
 
 <script>
-import { getCartridges, removeCartridge, updateCartridge } from '@/utils/http';
-import CartridgesTable from '@/components/Cartridges/CartridgesTable.vue';
+import { getDevices } from '@/utils/http';
+import DevicesTable from '@/components/Devices/DevicesTable.vue';
 import BtnBack from '@/components/Common/BtnBack.vue';
 import InputText from '@/components/Base/InputText.vue';
 
 export default {
-  name: 'Cartridges',
+  name: 'Devices',
   components: {
-    CartridgesTable,
+    DevicesTable,
     InputText,
     BtnBack
   },
   data: () => ({
     items: [],
     code: '',
-    activeRemoveId: 0,
     activeEditId: 0
   }),
   computed: {
-    serialNumberText() {
-      return this.$t('serialNumber');
+    codeText() {
+      return this.$t('code');
     },
     itemsFiltered() {
       return this.code
@@ -54,24 +50,17 @@ export default {
     }
   },
   async created() {
-    const response = await getCartridges();
+    const response = await getDevices();
     this.items = response.data || [];
   },
   methods: {
-    async onRemove(id) {
-      const { data: { id: responseId = id } } = await removeCartridge(id);
-      this.items = this.items.filter(el => el.id !== responseId);
-      this.onShowModalRemove(0);
-    },
-    async onEdit({ id, quantityResource, active }) {
-      const { data: response } = await updateCartridge({ id, quantityResource, active });
-      const item = this.items.find(el => el.id === id);
-      this.$set(item, 'quantityResource', response.quantityResource);
-      this.$set(item, 'active', response.active);
-      this.onShowModalEdit(0);
-    },
-    onShowModalRemove(id) {
-      this.activeRemoveId = id;
+    async onEdit() {
+    // async onEdit({ id, quantityResource, active }) {
+      // const { data: response } = await updateCartridge({ id, quantityResource, active });
+      // const item = this.items.find(el => el.id === id);
+      // this.$set(item, 'quantityResource', response.quantityResource);
+      // this.$set(item, 'active', response.active);
+      // this.onShowModalEdit(0);
     },
     onShowModalEdit(id) {
       this.activeEditId = id;

@@ -3,91 +3,72 @@
     <div class = 'wrapper-cartridges-table'>
       <table class = 'cartridges-table'>
         <colgroup>
-          <col class = 'cartridges-table__col-serial-number'>
+          <col>
+          <col class = 'cartridges-table__col-version'>
           <col class = 'cartridges-table__col-number'>
-          <col class = 'cartridges-table__col-number'>
-          <col class = 'cartridges-table__col-number'>
-          <col class = 'cartridges-table__col-active'>
         </colgroup>
 
         <thead>
           <tr class = 'cartridges-table__head-row'>
             <th
               class = 'cartridges-table__head-cell'
-              v-text='serialNumberText'
+              v-text='deviceText'
             />
             <th
               class = 'cartridges-table__head-cell'
-              v-text='quantityResourceText'
+              v-text='versionText'
             />
             <th
               class = 'cartridges-table__head-cell'
               v-text='quantityPrintedText'
             />
-            <th
-              class = 'cartridges-table__head-cell'
-              v-text='quantityBalanceText'
-            />
-            <th
-              class = 'cartridges-table__head-cell'
-              v-text='activeText'
-            />
           </tr>
         </thead>
 
-        <template v-for = '(item, index) in itemsOnPage'>
-          <tr
-            :key = 'item.id'
-            class = 'cartridges-table__body-row'
-            :data-index = 'index'
-            @click = 'onRowClick'
-          >
-            <td
-              class = 'cartridges-table__body-cell'
-              v-text = 'item.code'
-            />
-            <td
-              class = 'cartridges-table__body-cell'
-              v-text = 'item.quntityBalance'
-            />
-            <td
-              class = 'cartridges-table__body-cell'
-              v-text = 'item.quantityPrinted'
-            />
-            <td
-              class = 'cartridges-table__body-cell'
-              v-text = 'item.quantityResource'
-            />
-            <td
-              class = 'cartridges-table__body-cell'
-              v-text = 'item.activeSymbol'
-            />
-          </tr>
+        <tbody>
+          <template v-for = '(item, index) in itemsOnPage'>
+            <tr
+              :key = 'item.id'
+              class = 'cartridges-table__body-row'
+              :data-index = 'index'
+              @click = 'onRowClick'
+            >
+              <td
+                class = 'cartridges-table__body-cell cartridges-table__body-cell--device'
+                v-text = 'item.device'
+              />
+              <td
+                class = 'cartridges-table__body-cell'
+                v-text = 'item.appVersionCode'
+              />
+              <td
+                class = 'cartridges-table__body-cell'
+                v-text = 'item.quantityPrinted'
+              />
+            </tr>
 
-          <tr
-            :key = '`row-additional-${item.id}`'
-            class = 'cartridges-table__row-additional'
-          >
-            <td colspan = '5'>
-              <transition name = 'cartridges-table__transition-visible-additional'>
-                <div
-                  v-if = 'visibleAdditionals[index]'
-                  class = 'cartridges-table__wrapper-cartridge-table'
-                >
-                  <CartridgeTable
-                    :cartridge = 'item'
-                    :show-modal-remove = 'item.id === activeRemoveId'
-                    :show-modal-edit = 'item.id === activeEditId'
-                    @remove = 'onRemove'
-                    @edit = 'onEdit'
-                    @showModalRemove = 'onShowModalRemove'
-                    @showModalEdit = 'onShowModalEdit'
-                  />
-                </div>
-              </transition>
-            </td>
-          </tr>
-        </template>
+            <tr
+              :key = '`row-additional-${item.id}`'
+              class = 'cartridges-table__row-additional'
+            >
+              <td colspan = '3'>
+                <transition name = 'cartridges-table__transition-visible-additional'>
+                  <div
+                    v-if = 'visibleAdditionals[index]'
+                    class = 'cartridges-table__wrapper-cartridge-table'
+                  >
+                    <DeviceTable
+                      :item = 'item'
+                      :show-modal-edit = 'item.id === activeEditId'
+                      @edit = 'onEdit'
+                      @showModalEdit = 'onShowModalEdit'
+                    />
+                  </div>
+                </transition>
+              </td>
+            </tr>
+          </template>
+        </tbody>
       </table>
     </div>
     <div class = 'cartridges-table__footer'>
@@ -110,16 +91,16 @@
 </template>
 
 <script>
-import CartridgeTable from '@/components/Cartridges/CartridgeTable.vue';
+import DeviceTable from '@/components/Devices/DeviceTable.vue';
 import BtnTablePrev from '@/components/Common/BtnTablePrev.vue';
 import BtnTableNext from '@/components/Common/BtnTableNext.vue';
 
 const ROWS_PER_PAGE = 10;
 
 export default {
-  name: 'CartridgesTable',
+  name: 'DevicesTable',
   components: {
-    CartridgeTable,
+    DeviceTable,
     BtnTablePrev,
     BtnTableNext
   },
@@ -127,10 +108,6 @@ export default {
     items: {
       required: true,
       type: Array
-    },
-    activeRemoveId: {
-      required: true,
-      type: Number
     },
     activeEditId: {
       required: true,
@@ -142,20 +119,14 @@ export default {
     visibleAdditionals: []
   }),
   computed: {
-    serialNumberText() {
-      return this.$t('serialNumber');
-    },
-    quantityResourceText() {
-      return this.$t('quantityResource');
+    deviceText() {
+      return this.$t('device');
     },
     quantityPrintedText() {
       return this.$t('quantityPrinted');
     },
-    quantityBalanceText() {
-      return this.$t('quantityBalance');
-    },
-    activeText() {
-      return this.$t('active');
+    versionText() {
+      return this.$t('version');
     },
     pages() {
       return `${this.currentPage} / ${this.totalPages}`;
@@ -170,9 +141,16 @@ export default {
           this.currentPage * ROWS_PER_PAGE);
 
       return items.map(el => ({
-        ...el,
-        activeSymbol: el.active ? '\u2714' : '',
-        quntityBalance: el.quantityResource - el.quantityPrinted
+        id: el.id,
+        device: `${el.code} ${el.city} (${el.description})`,
+        appVersionCode: el.appVersionCode
+          ? `
+            ${+el.appVersionCode.toString().padStart(6, '0').substr(-6, 2)}.
+            ${+el.appVersionCode.toString().substr(-4, 2)}.
+            ${+el.appVersionCode.toString().substr(-2, 2)}
+            `
+          : '',
+        cartridges: el.cartridges
       }));
     }
   },
@@ -192,14 +170,8 @@ export default {
       const index = +event.currentTarget.dataset.index;
       this.$set(this.visibleAdditionals, index, !this.visibleAdditionals[index]);
     },
-    onRemove(id) {
-      this.$emit('remove', id);
-    },
     onEdit(obj) {
       this.$emit('edit', obj);
-    },
-    onShowModalRemove(id) {
-      this.$emit('showModalRemove', id);
     },
     onShowModalEdit(id) {
       this.$emit('showModalEdit', id);
@@ -242,16 +214,12 @@ export default {
   font-size: 1.2rem;
 }
 
-.cartridges-table__col-serial-number {
-  width: 7rem;
+.cartridges-table__col-version {
+  width: 9rem;
 }
 
 .cartridges-table__col-number {
   width: 5rem;
-}
-
-.cartridges-table__col-active {
-  width: 2rem;
 }
 
 .cartridges-table__head-row {
@@ -272,6 +240,10 @@ export default {
   padding: .5rem;
   font-size: 1.3rem;
   color: rgba(0, 0, 0, .87);
+}
+
+.cartridges-table__body-cell--device {
+  text-align: left;
 }
 
 .cartridges-table__row-additional {

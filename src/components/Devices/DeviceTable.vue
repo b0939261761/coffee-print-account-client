@@ -1,49 +1,67 @@
 <template>
   <div class = 'wrapper-cartridge-table'>
     <table
-      v-if = 'devices.length'
+      v-if = 'items.length'
       class = 'cartridge-table'
     >
       <colgroup>
-        <col>
-        <col class = 'cartridge-table__col-date'>
+        <col class = 'cartridge-table__col-serial-number'>
         <col class = 'cartridge-table__col-number'>
+        <col class = 'cartridge-table__col-number'>
+        <col class = 'cartridge-table__col-number'>
+        <col class = 'cartridge-table__col-date'>
       </colgroup>
 
       <thead>
         <tr class = 'cartridge-table__head-row'>
           <td
             class = 'cartridge-table__head-cell'
-            v-text = 'coffeePrinterText'
+            v-text = 'serialNumberText'
           />
           <td
             class = 'cartridge-table__head-cell'
-            v-text = 'lastActiveText'
+            v-text = 'quantityResourceText'
           />
           <td
             class = 'cartridge-table__head-cell'
             v-text = 'quantityPrintedText'
           />
+          <td
+            class = 'cartridge-table__head-cell'
+            v-text = 'quantityBalanceText'
+          />
+          <td
+            class = 'cartridge-table__head-cell'
+            v-text = 'lastActiveText'
+          />
         </tr>
       </thead>
 
       <tbody>
-        <template v-for = 'item in devices'>
+        <template v-for = 'value in items'>
           <tr
-            :key = 'item.deviceId'
+            :key = 'value.deviceId'
             class = 'cartridge-table__body-row'
           >
             <td
               class = 'cartridge-table__body-cell cartridge-table__body-cell--coffee-printer'
-              v-text = 'item.device'
+              v-text = 'value.code'
             />
             <td
               class = 'cartridge-table__body-cell'
-              v-text = 'item.lastActive'
+              v-text = 'value.quantityResource'
             />
             <td
               class = 'cartridge-table__body-cell'
-              v-text = 'item.quantityPrinted'
+              v-text = 'value.quantityPrinted'
+            />
+            <td
+              class = 'cartridge-table__body-cell'
+              v-text = 'value.quantityBalance'
+            />
+            <td
+              class = 'cartridge-table__body-cell'
+              v-text = 'value.lastActive'
             />
           </tr>
         </template>
@@ -52,21 +70,10 @@
 
     <div class = 'cartridge-table__wrapper-buttons'>
       <BtnTableEdit
-        :code = 'cartridge.code'
-        :quantity-resource = 'cartridge.quantityResource'
-        :active = 'cartridge.active'
+        :disabled = 'true'
         :show-modal = 'showModalEdit'
         @edit = 'onEdit'
         @showModal = 'onShowModalEdit'
-      />
-
-      <div class = 'cartridge-table__buttons-gap' />
-
-      <BtnTableRemove
-        :code = 'cartridge.code'
-        :show-modal = 'showModalRemove'
-        @remove = 'onRemove'
-        @showModal = 'onShowModalRemove'
       />
     </div>
   </div>
@@ -74,23 +81,17 @@
 
 <script>
 import { formatDateTime } from '@/utils/date';
-import BtnTableEdit from '@/components/Cartridges/BtnTableEdit.vue';
-import BtnTableRemove from '@/components/Cartridges/BtnTableRemove.vue';
+import BtnTableEdit from '@/components/Devices/BtnTableEdit.vue';
 
 export default {
-  name: 'CartridgeTable',
+  name: 'DeviceTable',
   components: {
-    BtnTableEdit,
-    BtnTableRemove
+    BtnTableEdit
   },
   props: {
-    cartridge: {
+    item: {
       required: true,
       type: Object
-    },
-    showModalRemove: {
-      required: true,
-      type: Boolean
     },
     showModalEdit: {
       required: true,
@@ -98,38 +99,40 @@ export default {
     }
   },
   computed: {
-    coffeePrinterText() {
-      return this.$t('coffeePrinter');
+    serialNumberText() {
+      return this.$t('serialNumber');
     },
-    lastActiveText() {
-      return this.$t('lastActive');
+    quantityResourceText() {
+      return this.$t('quantityResource');
     },
     quantityPrintedText() {
       return this.$t('quantityPrinted');
     },
-    devices() {
-      return this.cartridge.devices
-        .filter(el => el.deviceId)
+    quantityBalanceText() {
+      return this.$t('quantityBalance');
+    },
+    lastActiveText() {
+      return this.$t('lastActive');
+    },
+    items() {
+      return this.item.cartridges
+        .filter(el => el.cartridgeId)
         .map(el => ({
-          deviceId: el.deviceId,
-          device: `${el.deviceCode} ${el.deviceCity} (${el.deviceDescription})`,
+          cartridgeId: el.cartridgeId,
+          code: el.cartridgeCode,
           lastActive: formatDateTime(new Date(el.lastActive)),
-          quantityPrinted: el.quantityPrinted
+          quantityResource: el.quantityResource,
+          quantityPrinted: el.quantityPrinted,
+          quantityBalance: el.quantityResource - el.quantityPrinted
         }));
     }
   },
   methods: {
-    onRemove() {
-      this.$emit('remove', this.cartridge.id);
-    },
     onEdit(obj) {
-      this.$emit('edit', { id: this.cartridge.id, ...obj });
-    },
-    onShowModalRemove(status) {
-      this.$emit('showModalRemove', status ? this.cartridge.id : 0);
+      this.$emit('edit', { id: this.item.id, ...obj });
     },
     onShowModalEdit(status) {
-      this.$emit('showModalEdit', status ? this.cartridge.id : 0);
+      this.$emit('showModalEdit', status ? this.item.id : 0);
     }
   }
 };
@@ -146,8 +149,12 @@ export default {
   table-layout: fixed;
 }
 
-.cartridge-table__col-date {
+.cartridge-table__col-serial-number {
   width: 7rem;
+}
+
+.cartridge-table__col-date {
+  width: 10rem;
 }
 
 .cartridge-table__col-number {

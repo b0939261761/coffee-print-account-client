@@ -42,7 +42,7 @@ import BtnOk from '@/components/Common/BtnOk.vue';
 import BtnCancel from '@/components/Common/BtnCancel.vue';
 
 export default {
-  name: 'FormModalEditCartridge',
+  name: 'FormModalEditDevice',
   components: {
     FormModal,
     InputText,

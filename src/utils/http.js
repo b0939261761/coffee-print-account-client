@@ -29,10 +29,19 @@ http.interceptors.response.use(responseUse, responseError);
 
 export const getCartridges = () => http.get('/cartridges');
 export const removeCartridge = id => http.delete(`/cartridges/${id}`);
-export const updateCartridge = ({ id, quantity, active }) => http.patch(`/cartridges/${id}`, { quantity, active });
+
+export const updateCartridge = ({ id, quantityResource, active }) => http.patch(
+  `/cartridges/${id}`,
+  { quantityResource, active }
+);
+
+export const getDevices = () => http.get('/devices');
+
 
 export default {
   getCartridges,
   removeCartridge,
-  updateCartridge
+  updateCartridge,
+
+  getDevices
 };

@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$router.push({ name: 'cartridges' });
+      this.$router.push({ name: 'mainPage' });
     }
   }
 };

@@ -11,7 +11,7 @@
       v-if = 'showModal'
       to = 'formModal'
     >
-      <FormModalEditCartridge
+      <FormModalEditDevice
         :code = 'code'
         :quantity-resource = 'quantityResource'
         :active = 'active'
@@ -25,7 +25,7 @@
 <script>
 import BtnTable from '@/components/Base/BtnTable.vue';
 import Icon from '@/assets/edit.svg';
-import FormModalEditCartridge from '@/components/Cartridges/FormModalEditCartridge.vue';
+import FormModalEditDevice from '@/components/Devices/FormModalEditDevice.vue';
 
 
 export default {
@@ -33,21 +33,9 @@ export default {
   components: {
     BtnTable,
     Icon,
-    FormModalEditCartridge
+    FormModalEditDevice
   },
   props: {
-    code: {
-      required: true,
-      type: String
-    },
-    quantityResource: {
-      required: true,
-      type: Number
-    },
-    active: {
-      required: true,
-      type: Boolean
-    },
     showModal: {
       required: true,
       type: Boolean
