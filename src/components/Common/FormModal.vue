@@ -85,6 +85,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 2;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -99,8 +100,11 @@ export default {
   width: 50rem;
   max-width: calc(100% - 4rem);
   margin: 1.6rem;
+  overflow-x: hidden;
   overflow-y: auto;
   text-align: left;
+  word-break: break-word;
+  hyphens: auto;
   background-color: white;
   border-radius: .2rem;
   box-shadow:

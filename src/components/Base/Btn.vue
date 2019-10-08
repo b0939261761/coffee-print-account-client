@@ -1,6 +1,7 @@
 <template>
   <button
     :class = '["btn", classColorTheme]'
+    :style = 'style'
     @click.prevent = 'onClick'
     v-on = '$listeners'
   >
@@ -27,13 +28,29 @@ export default {
   name: 'Btn',
   props: {
     label: {
-      type: String || null,
+      type: String,
       default: ''
     },
     colorTheme: {
-      type: String || null,
+      type: String,
       validator: value => ['primary', 'dark', 'outline'].includes(value),
       default: 'primary'
+    },
+    marginTop: {
+      type: String,
+      default: null
+    },
+    marginRight: {
+      type: String,
+      default: null
+    },
+    marginBottom: {
+      type: String,
+      default: null
+    },
+    marginLeft: {
+      type: String,
+      default: null
     }
   },
   data: () => ({
@@ -44,6 +61,14 @@ export default {
   computed: {
     classColorTheme() {
       return `btn--${this.colorTheme}`;
+    },
+    style() {
+      return {
+        marginTop: this.marginTop,
+        marginRight: this.marginRight,
+        marginBottom: this.marginBottom,
+        marginLeft: this.marginLeft
+      };
     },
     rippleStyle() {
       return {
@@ -81,7 +106,7 @@ export default {
   align-items: center;
   width: 100%;
   min-height: 4.4rem;
-  margin: 0 0 2rem 0;
+  margin: 0 0 2rem;
   padding: .8rem 1.6rem;
   overflow: hidden;
   font-weight: bold;

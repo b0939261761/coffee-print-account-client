@@ -1,29 +1,8 @@
 # coffee-print-account-client
 
-## Project setup
-```
-npm install
-```
+## Warning
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Не обновлять axios на 0.19, потому что тогда нельзя
+передавать параметры в interceptors
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+[issues](https://github.com/axios/axios/issues/2295)

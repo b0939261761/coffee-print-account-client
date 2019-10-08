@@ -1,6 +1,7 @@
 <template>
   <Btn
     :label = 'label'
+    v-bind = '$attrs'
     @click = 'onClick'
   >
     <template #icon>

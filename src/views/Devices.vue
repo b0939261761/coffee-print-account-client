@@ -1,43 +1,58 @@
 <template>
-  <div class = 'cartridges'>
-    <div class = 'cartridges__header'>
+  <PageTable>
+    <template #header>
       <InputText
         v-model = 'code'
         placeholder = 'XXXXXXXXX'
         :label = 'codeText'
         inputmode = 'number'
       />
-    </div>
+    </template>
+    <template #body>
+      <DevicesTable
+        :items = 'itemsFiltered'
+        @edit = 'activeUserId = $event'
+      />
+    </template>
 
-    <DevicesTable
-      :items = 'itemsFiltered'
-      :active-edit-id = 'activeEditId'
-      @edit = 'onEdit'
-      @showModalEdit = 'onShowModalEdit'
-    />
-    <div class = 'cartridges__footer'>
-      <BtnBack @click = 'onGoBack' />
-    </div>
-  </div>
+    <template #footer>
+      <BtnBack @click = '$router.push({ name: "mainPage" })' />
+    </template>
+
+    <template #modal>
+      <!-- <FormModalEditUser
+        v-if = 'activeDeviceId !== null'
+        :user-id = 'activeDeviceId'
+        @success = 'onEdit'
+        @cancel = 'activeDeviceId = null'
+      /> -->
+    </template>
+  </PageTable>
 </template>
 
 <script>
-import { getDevices } from '@/utils/http';
-import DevicesTable from '@/components/Devices/DevicesTable.vue';
-import BtnBack from '@/components/Common/BtnBack.vue';
+import PageTable from '@/components/Common/Page/PageTable.vue';
 import InputText from '@/components/Base/InputText.vue';
+import BtnBack from '@/components/Common/BtnBack.vue';
+
+import DevicesTable from '@/components/Devices/DevicesTable.vue';
+import FormModalEditUser from '@/components/Users/FormModalEditUser.vue';
+
+import { getDevices } from '@/utils/http';
 
 export default {
   name: 'Devices',
   components: {
-    DevicesTable,
+    PageTable,
     InputText,
-    BtnBack
+    BtnBack,
+    DevicesTable,
+    FormModalEditUser
   },
   data: () => ({
     items: [],
     code: '',
-    activeEditId: 0
+    activeDeviceId: null
   }),
   computed: {
     codeText() {
@@ -49,50 +64,27 @@ export default {
         : this.items;
     }
   },
-  async created() {
-    const response = await getDevices();
-    this.items = response.data || [];
+  async mounted() {
+    try {
+      const { data = [] } = await getDevices();
+      this.items = data;
+    } catch {}
   },
   methods: {
-    async onEdit() {
-    // async onEdit({ id, quantityResource, active }) {
-      // const { data: response } = await updateCartridge({ id, quantityResource, active });
-      // const item = this.items.find(el => el.id === id);
-      // this.$set(item, 'quantityResource', response.quantityResource);
-      // this.$set(item, 'active', response.active);
-      // this.onShowModalEdit(0);
-    },
-    onShowModalEdit(id) {
-      this.activeEditId = id;
-    },
-    onGoBack() {
-      this.$router.push({ name: 'mainPage' });
+    async onEdit(obj) {
+      // try {
+      //   if (this.activeDeviceId) {
+      //     const { data: user } = await updateUser(obj);
+      //     const index = this.items.findIndex(el => el.id === this.activeDeviceId);
+      //     if (index) this.$set(this.items, index, user);
+      //   } else {
+      //     const { data: user } = await addUser(obj);
+      //     this.items.unshift(user);
+      //   }
+      // } catch {}
+
+      this.activeDeviceId = null;
     }
   }
 };
 </script>
-
-<style scoped>
-.cartridges {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  background-color: #f3b4ac;
-}
-
-.cartridges__header {
-  /* margin-bottom: -1rem; */
-  padding: 1rem 1rem 0;
-  border-radius: .5rem .5rem 0 0;
-  box-shadow: inset .2rem -.2rem 1rem 0 rgba(0, 0, 0, .2);
-}
-
-.cartridges__footer {
-  display: flex;
-  margin-bottom: -1rem;
-  padding: 1rem 1rem 0;
-  border-radius: .5rem .5rem 0 0;
-  box-shadow: inset .2rem -.2rem 1rem 0 rgba(0, 0, 0, .2);
-}
-</style>

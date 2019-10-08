@@ -11,6 +11,10 @@ Vue.use(PortalVue);
 
 Vue.config.productionTip = false;
 
+// Vue.config.errorHandler = (err, vm, info) => {
+//   if (err.message === 'REFRESH_TOKEN_INVALID') vm.$router.push({ name: 'login' });
+// };
+
 export default new Vue({
   router,
   store,

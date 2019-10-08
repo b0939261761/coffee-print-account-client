@@ -50,7 +50,11 @@ module.exports = {
     'vue/no-restricted-syntax': [
       'error',
       {
-        'selector': 'CallExpression',
+        'selector': 'VElement > VExpressionContainer CallExpression',
+        'message': 'Call expressions are not allowed.'
+      },
+      {
+        'selector': 'VElement VAttribute[key.name != "on"] CallExpression',
         'message': 'Call expressions are not allowed.'
       }
     ],
@@ -92,7 +96,7 @@ module.exports = {
     // Disallow Reassignment of Function Parameters (no-param-reassign)
     'no-param-reassign': ['error', {
       props: true,
-      ignorePropertyModificationsFor: ['state']
+      ignorePropertyModificationsFor: ['state', 'config']
     }],
 
     // disallow the unary operators ++ and -- (no-plusplus)
@@ -102,7 +106,14 @@ module.exports = {
     'no-bitwise': ['error', { allow: ['&'] }],
 
     // Disallow Assignment in return Statement (no-return-assign)
-    'no-return-assign': 'off'
+    'no-return-assign': 'off',
+
+    // Disallow use of the void operator. (no-void)
+    'no-void': 'off',
+
+    // disallow empty block statements (no-empty)
+    'no-empty': ['error', { allowEmptyCatch: true }],
+
   },
   parserOptions: {
     parser: 'babel-eslint'

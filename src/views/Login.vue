@@ -1,5 +1,7 @@
 <template>
-  <div class = 'login'>
+  <PageCustom>
+    <div class = 'login-background' />
+
     <SelectLanguage />
 
     <form
@@ -21,15 +23,18 @@
         :label = 'passwordText'
       />
 
-      <!-- :disabled = '!login || !password' -->
       <BtnSignIn
+        :disabled = '!login || !password'
         @click = 'onSubmit'
       />
     </form>
-  </div>
+  </PageCustom>
 </template>
 
 <script>
+import { authLogin } from '@/utils/http';
+
+import PageCustom from '@/components/Common/Page/PageCustom.vue';
 import InputText from '@/components/Base/InputText.vue';
 import BtnSignIn from '@/components/Login/BtnSignIn.vue';
 import SelectLanguage from '@/components/Common/SelectLanguage.vue';
@@ -37,13 +42,14 @@ import SelectLanguage from '@/components/Common/SelectLanguage.vue';
 export default {
   name: 'Login',
   components: {
+    PageCustom,
     InputText,
     BtnSignIn,
     SelectLanguage
   },
   data: () => ({
-    login: '',
-    password: ''
+    login: 'admin',
+    password: '6k3vddrb2v'
   }),
   computed: {
     emailText() {
@@ -54,21 +60,43 @@ export default {
     }
   },
   methods: {
-    onSubmit() {
-      this.$router.push({ name: 'mainPage' });
+    async onSubmit() {
+      const data = { username: this.login, password: this.password };
+
+      try {
+        const { headers } = await authLogin(data);
+        const { 'access-token': accessToken, 'refresh-token': refreshToken } = headers;
+
+        this.$store.dispatch('auth/setTokens', { accessToken, refreshToken });
+        this.$router.push({ name: 'mainPage' });
+      } catch (err) {
+        if (err.message === 'FAIL_AUTH') {
+          this.$store.dispatch('auth/removeTokens');
+          this.password = '';
+        }
+      }
     }
   }
 };
 </script>
 
 <style scoped>
-.login {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.login-background {
+  position: absolute;
+  top: 0;
+  bottom: 0;
   width: 100%;
   height: 100%;
+  background-image:
+    url('../assets/logo-white.png'),
+    url('../assets/background-bottom.png');
+  background-repeat: no-repeat;
+  background-position:
+    center 5rem,
+    center bottom;
+  background-size:
+    17rem auto,
+    calc(100% - 2rem) auto;
 }
 
 .login__form {

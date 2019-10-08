@@ -1,7 +1,61 @@
 export default {
+  // Table
+  editRecord: 'Edit record',
+  removeRecord: 'Remove record',
+  previousPage: 'Previous page',
+  nextPage: 'Next page',
+
+  // Btn
+  back: 'Back',
+  add: 'Add',
+  ok: 'Ok',
+  cancel: 'Cancel',
+
+  owner: 'Owner',
+
+
+  // Login
   email: 'Email',
-  password: 'Password',
+  password: 'Пароль',
   signIn: 'Sign me in!',
+
+  // MainPage
+  cartridges: 'Cartridges',
+  devices: 'Devices',
+  users: 'Users',
+  signOut: 'Sign out',
+
+  // Devices
+  code: 'Code',
+  version: 'App version',
+  // { title: this.$t('quantityPrinted'), width: '5rem' }
+
+  // Users
+  role: 'Role',
+  admin: 'Admin',
+  trader: 'Trader',
+  dealer: 'Dealer',
+  customer: 'Customer',
+  modalTitleAddUser: 'Add user',
+  modalTitleEditUser: 'Edit {0}',
+
+  errors: {
+    HTTP: {
+      title: 'Connection error',
+      message: '{statusCode} "{method} {url}"\n{message}'
+    },
+    NETWORK: {
+      title: 'Network error',
+      message: '{method} {url}'
+    },
+    FAIL_AUTH: {
+      title: 'Authentication error',
+      message: 'Incorrect еmail or password'
+    }
+  },
+
+  // ----------------------------
+
   serialNumber: 'S/N',
   quantityResource: 'Ресурс',
   quantityBalance: 'Остаток',
@@ -9,20 +63,12 @@ export default {
   active: 'Active',
   coffeePrinter: 'Coffee printer',
   lastActive: 'Активность',
-  edit: 'Edit',
-  remove: 'Remove',
+
   modalTitleRemove: 'Удалить запись?',
-  modalMessageRemove: 'Картридж [{0}] будет удален',
+  modalMessageRemove: 'Картридж {0} будет удален',
+
   modalTitleEditCartridge: 'Картридж [{0}]',
-  add: 'Добавить',
-  back: 'Назад',
-  previous: 'Previous',
-  next: 'Next',
-  ok: 'Ok',
-  cancel: 'Cancel',
-  cartridges: 'Картриджи',
-  devices: 'Принтера',
-  device: 'Принтер',
-  code: 'Код',
-  version: 'Версия'
+
+
+  device: 'Принтер'
 };
