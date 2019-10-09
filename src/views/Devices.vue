@@ -11,7 +11,8 @@
     <template #body>
       <DevicesTable
         :items = 'itemsFiltered'
-        @edit = 'activeUserId = $event'
+        :columns = '$options.columns'
+        @edit = 'activeDeviceId = $event'
       />
     </template>
 
@@ -20,12 +21,12 @@
     </template>
 
     <template #modal>
-      <!-- <FormModalEditUser
+      <FormModalEditDevice
         v-if = 'activeDeviceId !== null'
-        :user-id = 'activeDeviceId'
+        :device-id = 'activeDeviceId'
         @success = 'onEdit'
         @cancel = 'activeDeviceId = null'
-      /> -->
+      />
     </template>
   </PageTable>
 </template>
@@ -34,11 +35,13 @@
 import PageTable from '@/components/Common/Page/PageTable.vue';
 import InputText from '@/components/Base/InputText.vue';
 import BtnBack from '@/components/Common/BtnBack.vue';
-
 import DevicesTable from '@/components/Devices/DevicesTable.vue';
-import FormModalEditUser from '@/components/Users/FormModalEditUser.vue';
+import FormModalEditDevice from '@/components/Devices/FormModalEditDevice.vue';
 
-import { getDevices } from '@/utils/http';
+import { versionCodeToName } from '@/utils/tools';
+import { formatDateTime } from '@/utils/date';
+
+import { getDevices, updateDevice } from '@/utils/http';
 
 export default {
   name: 'Devices',
@@ -47,7 +50,7 @@ export default {
     InputText,
     BtnBack,
     DevicesTable,
-    FormModalEditUser
+    FormModalEditDevice
   },
   data: () => ({
     items: [],
@@ -64,24 +67,51 @@ export default {
         : this.items;
     }
   },
-  async mounted() {
+  async created() {
+    this.$options.columns = {
+      main: [
+        { title: this.$t('code'), width: '5rem', value: 'code' },
+        { title: this.$t('owner'), width: null, value: 'userEmail' },
+        { title: this.$t('quantityPrinted'), width: '5rem', value: 'quantityPrinted' }
+      ],
+      additional: [
+        { title: this.$t('appVersion'), width: '5rem', value: 'appVersionName' },
+        { title: this.$t('city'), width: null, value: 'city' },
+        { title: this.$t('description'), width: null, value: 'description' }
+      ],
+      children: [
+        { title: this.$t('serialNumber'), width: null, value: 'code' },
+        { title: this.$t('quantityResource'), width: '4rem', value: 'quantityResource' },
+        { title: this.$t('quantityPrinted'), width: '4rem', value: 'quantityPrinted' },
+        { title: this.$t('quantityBalance'), width: '4rem', value: 'quantityBalance' },
+        { title: this.$t('lastActive'), width: '6rem', value: 'lastActive' }
+      ]
+    };
+
     try {
       const { data = [] } = await getDevices();
-      this.items = data;
+
+      this.items = data.map(this.transformItem);
     } catch {}
   },
   methods: {
+    transformItem(item) {
+      return {
+        ...item,
+        appVersionName: versionCodeToName(item.appVersionCode),
+        children: item.cartridges.map(elCart => ({
+          ...elCart,
+          lastActive: formatDateTime(new Date(elCart.lastActive)),
+          quantityBalance: elCart.quantityResource - elCart.quantityPrinted
+        }))
+      };
+    },
     async onEdit(obj) {
-      // try {
-      //   if (this.activeDeviceId) {
-      //     const { data: user } = await updateUser(obj);
-      //     const index = this.items.findIndex(el => el.id === this.activeDeviceId);
-      //     if (index) this.$set(this.items, index, user);
-      //   } else {
-      //     const { data: user } = await addUser(obj);
-      //     this.items.unshift(user);
-      //   }
-      // } catch {}
+      try {
+        const { data: device } = await updateDevice(obj);
+        const index = this.items.findIndex(el => el.id === this.activeDeviceId);
+        if (index !== -1) this.$set(this.items, index, this.transformItem(device));
+      } catch {}
 
       this.activeDeviceId = null;
     }

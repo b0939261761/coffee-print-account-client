@@ -1,7 +1,6 @@
 <template>
   <td
     class = 'table-body-cell'
-    :style = 'styles'
   >
     <slot />
   </td>
@@ -28,7 +27,6 @@ export default {
 <style scoped>
 .table-body-cell {
   padding: .5rem;
-  font-size: 1.3rem;
   color: rgba(0, 0, 0, .87);
 }
 </style>

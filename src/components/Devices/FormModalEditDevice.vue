@@ -1,100 +1,94 @@
 <template>
-  <FormModal @cancel = 'onCancel'>
-    <template slot = 'header'>
-      {{ modalTitleEditCartridgeText }}
-    </template>
+  <FormModalEdit
+    :disabled-success = 'disabledSuccess'
+    :title-text = 'titleText'
+    @cancel = '$emit("cancel")'
+    @success = 'onSuccess'
+  >
+    <InputText
+      v-model = 'city'
+      placeholder = 'London'
+      :label = 'cityText'
+    />
 
-    <template slot = 'body'>
-      <InputText
-        v-model = 'quantityResourceChange'
-        placeholder = 'XXXXX'
-        :label = 'quantityResourceText'
-        type = 'number'
-        inputmode = 'number'
-      />
+    <InputText
+      v-model = 'description'
+      placeholder = 'Client info, address'
+      :label = 'descriptionText'
+    />
 
-      <InputSwitch
-        v-model = 'activeChange'
-        :label = 'activeText'
-      />
-    </template>
-
-    <template slot ='footer'>
-      <BtnOk
-        class = 'btn-selected-picture--margin'
-        :disabled = 'quantityResourceChange === quantityResource && activeChange === active'
-        @click = 'onOk'
-      />
-
-      <BtnCancel
-        color-theme = 'outline'
-        @click = 'onCancel'
-      />
-    </template>
-  </FormModal>
+    <SelectCustom
+      v-model = 'userId'
+      :data = 'usersData'
+      placeholder = 'Выбирите родителя'
+    />
+  </FormModalEdit>
 </template>
 
 <script>
-import FormModal from '@/components/Common/FormModal.vue';
+import FormModalEdit from '@/components/Main/FormModalEdit.vue';
 import InputText from '@/components/Base/InputText.vue';
-import InputSwitch from '@/components/Base/InputSwitch.vue';
-import BtnOk from '@/components/Common/BtnOk.vue';
-import BtnCancel from '@/components/Common/BtnCancel.vue';
+import SelectCustom from '@/components/Base/SelectCustom.vue';
+
+import { getDevice, getUserChildren } from '@/utils/http';
 
 export default {
   name: 'FormModalEditDevice',
   components: {
-    FormModal,
+    FormModalEdit,
     InputText,
-    InputSwitch,
-    BtnOk,
-    BtnCancel
+    SelectCustom
   },
   props: {
-    code: {
-      required: true,
-      type: String
-    },
-    quantityResource: {
+    deviceId: {
       required: true,
       type: Number
-    },
-    active: {
-      required: true,
-      type: Boolean
     }
   },
-  data() {
-    return {
-      quantityResourceChange: this.quantityResource,
-      activeChange: this.active
-    };
-  },
+  data: () => ({
+    device: {},
+    city: '',
+    description: '',
+    userId: 0,
+    usersData: []
+  }),
   computed: {
-    modalTitleEditCartridgeText() {
-      return this.$t('modalTitleEditCartridge', [this.code]);
+    titleText() {
+      return this.$t('modalTitleEditDevice', [this.device.code]);
     },
-    quantityResourceText() {
-      return `${this.$t('quantityResource')}`;
+    cityText() {
+      return this.$t('city');
     },
-    activeText() {
-      return `${this.$t('active')}`;
+    descriptionText() {
+      return this.$t('description');
+    },
+    disabledSuccess() {
+      return false;
     }
+  },
+  async created() {
+    try {
+      const { data: device } = await getDevice(this.deviceId);
+      this.device = device;
+
+      this.code = this.device.code;
+      this.city = this.device.city;
+      this.description = this.device.description;
+      this.userId = this.device.userId;
+
+      const { data: responseUsers } = await getUserChildren();
+      this.usersData = responseUsers.map(el => ({ value: el.id, label: el.email }));
+    } catch (err) {}
   },
   methods: {
-    onOk() {
-      this.$emit('ok',
-        { quantityResource: this.quantityResourceChange, active: this.activeChange });
-    },
-    onCancel() {
-      this.$emit('cancel');
+    onSuccess() {
+      this.$emit('success', {
+        id: this.device.id,
+        city: this.city,
+        description: this.description,
+        userId: this.userId
+      });
     }
   }
 };
 </script>
-
-<style scoped>
-.btn-selected-picture--margin {
-  margin-right: 1.6rem;
-}
-</style>

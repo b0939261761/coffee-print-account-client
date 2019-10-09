@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { getCartridges, removeCartridge, updateCartridge } from '@/utils/http';
+import { getCartridges, updateCartridge } from '@/utils/http';
 import CartridgesTable from '@/components/Cartridges/CartridgesTable.vue';
 import BtnBack from '@/components/Common/BtnBack.vue';
 import InputText from '@/components/Base/InputText.vue';
@@ -59,9 +59,9 @@ export default {
   },
   methods: {
     async onRemove(id) {
-      const { data: { id: responseId = id } } = await removeCartridge(id);
-      this.items = this.items.filter(el => el.id !== responseId);
-      this.onShowModalRemove(0);
+      // const { data: { id: responseId = id } } = await removeCartridge(id);
+      // this.items = this.items.filter(el => el.id !== responseId);
+      // this.onShowModalRemove(0);
     },
     async onEdit({ id, quantityResource, active }) {
       const { data: response } = await updateCartridge({ id, quantityResource, active });

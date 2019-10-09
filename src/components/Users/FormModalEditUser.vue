@@ -88,7 +88,7 @@ export default {
       return this.$t('role');
     },
     disabledSuccess() {
-      return this.email === this.user.email;
+      return false;
     }
   },
   async created() {
@@ -126,6 +126,7 @@ export default {
     },
     onSuccess() {
       this.$emit('success', {
+        id: this.user.id,
         email: this.email,
         roleId: this.roleId,
         parentId: this.parentId,

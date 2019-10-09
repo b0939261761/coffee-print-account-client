@@ -22,7 +22,17 @@ export default {
   users: 'Користувачі',
   signOut: 'Вихід',
 
-  //
+  // Devices
+  code: 'Код',
+  appVersion: 'App версія',
+  serialNumber: 'S/N',
+  city: 'Місто',
+  description: 'Опис',
+  quantityResource: 'Ресурс',
+  quantityPrinted: 'Надруковано',
+  quantityBalance: 'Залишок',
+  lastActive: 'Активність',
+  modalTitleEditDevice: 'Принтер {0}',
 
   // Users
   role: 'Роль',

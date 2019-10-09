@@ -112,39 +112,20 @@ export const authLogin = obj => http.post('/auth/login', obj, { withoutToken: tr
 export const authLogout = () => http.post('/auth/logout');
 
 export const getCartridges = () => http.get('/cartridges');
-export const removeCartridge = id => http.delete(`/cartridges/${id}`);
-
-export const updateCartridge = ({ id, quantityResource, active }) => http.patch(
-  `/cartridges/${id}`,
-  { quantityResource, active }
-);
+export const getCartridge = id => http.get(`/cartridges/${id}`);
+export const updateCartridge = ({ id, ...obj }) => http.patch(`/cartridges/${id}`, obj);
 
 export const getDevices = () => http.get('/devices');
+export const getDevice = id => http.get(`/devices/${id}`);
+export const updateDevice = ({ id, ...obj }) => http.patch(`/devices/${id}`, obj);
 
 export const getUsers = () => http.get('/users');
 export const getUser = id => http.get(`/users/${id}`);
 export const getUserList = obj => http.get('/users/list', { params: obj });
+export const getUserChildren = () => http.get('/users/children');
 export const addUser = obj => http.post('/users', obj);
-export const updateUser = obj => http.post('/users', obj);
+export const updateUser = ({ id, ...obj }) => http.patch(`/users/${id}`, obj);
 
 export const getRoles = () => http.get('/roles');
 
-
-export default {
-  authLogin,
-  authLogout,
-
-  getCartridges,
-  removeCartridge,
-  updateCartridge,
-
-  getDevices,
-
-  getUsers,
-  getUser,
-  getUserList,
-  addUser,
-  updateUser,
-
-  getRoles
-};
+export default {};

@@ -11,11 +11,12 @@ export default {
   ok: 'Ok',
   cancel: 'Cancel',
 
+  // Shared
+  email: 'Email',
   owner: 'Owner',
 
 
   // Login
-  email: 'Email',
   password: 'Пароль',
   signIn: 'Sign me in!',
 
@@ -27,8 +28,15 @@ export default {
 
   // Devices
   code: 'Code',
-  version: 'App version',
-  // { title: this.$t('quantityPrinted'), width: '5rem' }
+  appVersion: 'App version',
+  serialNumber: 'S/N',
+  city: 'City',
+  description: 'Description',
+  quantityResource: 'Resource',
+  quantityPrinted: 'Printed',
+  quantityBalance: 'Balance',
+  lastActive: 'Last active',
+  modalTitleEditDevice: 'Device {0}',
 
   // Users
   role: 'Role',
@@ -37,7 +45,7 @@ export default {
   dealer: 'Dealer',
   customer: 'Customer',
   modalTitleAddUser: 'Add user',
-  modalTitleEditUser: 'Edit {0}',
+  modalTitleEditUser: 'User {0}',
 
   errors: {
     HTTP: {
@@ -56,13 +64,10 @@ export default {
 
   // ----------------------------
 
-  serialNumber: 'S/N',
-  quantityResource: 'Ресурс',
-  quantityBalance: 'Остаток',
-  quantityPrinted: 'Напечатано',
+
   active: 'Active',
   coffeePrinter: 'Coffee printer',
-  lastActive: 'Активность',
+
 
   modalTitleRemove: 'Удалить запись?',
   modalMessageRemove: 'Картридж {0} будет удален',

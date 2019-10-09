@@ -4,14 +4,8 @@
 
     <div class = 'main-page__wrapper-buttons'>
       <BtnCartridges @click = '$router.push({ name: "cartridges" })' />
-
       <BtnDevices @click = '$router.push({ name: "devices" })' />
-
-      <BtnUsers
-        v-if = '$store.state.auth.roleId < 4'
-        @click = '$router.push({ name: "users" })'
-      />
-
+      <BtnUsers @click = '$router.push({ name: "users" })' />
       <BtnSignOut @click = 'onSignOut' />
     </div>
   </PageCustom>

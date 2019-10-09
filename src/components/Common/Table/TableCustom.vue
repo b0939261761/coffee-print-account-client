@@ -15,7 +15,7 @@ export default {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   user-select: none;
 }
 </style>

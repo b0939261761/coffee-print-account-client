@@ -85,7 +85,7 @@ export default {
         if (this.activeUserId) {
           const { data: user } = await updateUser(obj);
           const index = this.items.findIndex(el => el.id === this.activeUserId);
-          if (index) this.$set(this.items, index, user);
+          if (index !== -1) this.$set(this.items, index, user);
         } else {
           const { data: user } = await addUser(obj);
           this.items.unshift(user);

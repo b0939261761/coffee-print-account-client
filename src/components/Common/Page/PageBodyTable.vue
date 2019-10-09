@@ -15,6 +15,8 @@
             <TableHeadCell
               v-for = '(value, index) in columns'
               :key = 'index'
+              style = 'font-size: 1.2rem;'
+              :sticky = 'true'
               v-text = 'value.title'
             />
           </TableHeadRow>

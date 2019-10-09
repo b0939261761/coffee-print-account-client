@@ -1,6 +1,6 @@
 <template>
   <PageBodyTable
-    :columns = 'columns.main'
+    :columns = 'columnsMain'
     :current-page = 'currentPage'
     :item-count = 'items.length'
     :rows-per-page = '$options.rowsPerPage'
@@ -14,9 +14,9 @@
           @click = 'onRowClick'
         >
           <TableBodyCell
-            v-for = '({ value }, index) in columns.main'
+            v-for = '(value, index) in columnsMain'
             :key = 'index'
-            v-text = 'item[value]'
+            v-text = 'item[columnsMain]'
           />
         </TableBodyRow>
 
@@ -26,17 +26,15 @@
           class = 'row-additional'
         >
           <TableBodyCell
-            :colspan = 'columns.main.length'
+            colspan = '3'
             class = 'cell-additional'
           >
-            <TableInside :columns = 'columns.additional'>
+            <TableInside :columns = '$options.columnsAdditional'>
               <template #body>
                 <TableBodyRow class = 'table-inside-body-row'>
-                  <TableBodyCell
-                    v-for = '({ value }, index) in columns.additional'
-                    :key = 'index'
-                    v-text = 'item[value]'
-                  />
+                  <TableBodyCell v-text = 'item.appVersionName' />
+                  <TableBodyCell v-text = 'item.city' />
+                  <TableBodyCell v-text = 'item.description' />
                 </TableBodyRow>
               </template>
 
@@ -46,20 +44,20 @@
             </TableInside>
 
             <TableInside
-              v-if = 'item.children.length'
-              :columns = 'columns.children'
+              v-if = 'item.cartridges.length'
+              :columns = '$options.columnsCartridges'
             >
               <template #body>
                 <TableBodyRow
-                  v-for = 'child in item.children'
-                  :key = 'child.id'
+                  v-for = 'value in item.cartridges'
+                  :key = 'value.id'
                   class = 'table-inside-body-row'
                 >
-                  <TableBodyCell
-                    v-for = '({ value }, index) in columns.children'
-                    :key = 'index'
-                    v-text = 'child[value]'
-                  />
+                  <TableBodyCell v-text = 'value.code' />
+                  <TableBodyCell v-text = 'value.quantityResource' />
+                  <TableBodyCell v-text = 'value.quantityPrinted' />
+                  <TableBodyCell v-text = 'value.quantityBalance' />
+                  <TableBodyCell v-text = 'value.lastActive' />
                 </TableBodyRow>
               </template>
             </TableInside>
@@ -90,16 +88,16 @@ export default {
     TableInside
   },
   mixins: [pageBodyTable],
-  props: {
-    items: {
-      required: true,
-      type: Array
-    },
-    columns: {
-      required: true,
-      type: Object
-    }
-  },
+  // props: {
+  //   columnsMain: {
+  //     type: Array,
+  //     default: () => []
+  //   },
+  //   valuesMain: {
+  //     type: Array,
+  //     default: () => []
+  //   }
+  // },
   data: () => ({
     visibleAdditionals: []
   }),
@@ -107,9 +105,29 @@ export default {
     currentPage: {
       immediate: true,
       handler() {
-        this.visibleAdditionals = Array(this.$options.rowsPerPage);
+        this.visibleAdditionals = Array(10);
       }
     }
+  },
+  created() {
+    this.columnsMain = [
+      { title: this.$t('code'), width: '5rem', value: 'code' },
+      { title: this.$t('owner'), width: null, value: 'userEmail' },
+      { title: this.$t('quantityPrinted'), width: '5rem', value: 'quantityPrinted' }
+    ];
+
+    this.$options.columnsAdditional = [
+      { title: this.$t('appVersion'), width: '5rem' },
+      { title: this.$t('city'), width: null },
+      { title: this.$t('description'), width: null }
+    ];
+    this.$options.columnsCartridges = [
+      { title: this.$t('serialNumber'), width: null },
+      { title: this.$t('quantityResource'), width: '4rem' },
+      { title: this.$t('quantityPrinted'), width: '4rem' },
+      { title: this.$t('quantityBalance'), width: '4rem' },
+      { title: this.$t('lastActive'), width: '6rem' }
+    ];
   },
   methods: {
     onRowClick(event) {
@@ -136,4 +154,9 @@ export default {
 .table-inside-body-row:not(:first-child) {
   border-top: .1rem dashed rgba(134, 134, 134, .4);
 }
+
+/* .row:nth-child(4n),
+.row:nth-child(4n+3) {
+  background-color: rgba(214, 214, 214, .2);
+} */
 </style>

@@ -22,6 +22,18 @@ export default {
   users: 'Пользователи',
   signOut: 'Выход',
 
+  // Devices
+  code: 'Код',
+  appVersion: 'App версия',
+  serialNumber: 'S/N',
+  city: 'Город',
+  description: 'Описание',
+  quantityResource: 'Ресурс',
+  quantityPrinted: 'Отпечатано',
+  quantityBalance: 'Остаток',
+  lastActive: 'Активность',
+  modalTitleEditDevice: 'Принтер {0}',
+
   // Users
   role: 'Роль',
   owner: 'Владелец',
