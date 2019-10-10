@@ -48,10 +48,10 @@ export default {
     SelectLanguage
   },
   data: () => ({
-    // username: '',
-    // password: ''
-    username: 'admin',
-    password: '6k3vddrb2v'
+    username: '',
+    password: ''
+    // username: 'admin',
+    // password: '6k3vddrb2v'
   }),
   computed: {
     emailText() {
