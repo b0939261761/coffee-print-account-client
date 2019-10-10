@@ -11,9 +11,17 @@ export default {
   ok: 'Ok',
   cancel: 'Отмена',
 
-  // Login
+  // Shared
   email: 'Email',
   password: 'Пароль',
+  owner: 'Владелец',
+  serialNumber: 'S/N',
+  quantityResource: 'Ресурс',
+  quantityPrinted: 'Отпечатано',
+  quantityBalance: 'Остаток',
+  lastActive: 'Активность',
+
+  // Login
   signIn: 'Войти',
 
   // MainPage
@@ -22,21 +30,20 @@ export default {
   users: 'Пользователи',
   signOut: 'Выход',
 
+  // Cartridges
+  device: 'Принтер',
+  active: 'Активный',
+  modalTitleEditCartridge: 'Картридж {0}',
+
   // Devices
   code: 'Код',
   appVersion: 'App версия',
-  serialNumber: 'S/N',
   city: 'Город',
   description: 'Описание',
-  quantityResource: 'Ресурс',
-  quantityPrinted: 'Отпечатано',
-  quantityBalance: 'Остаток',
-  lastActive: 'Активность',
   modalTitleEditDevice: 'Принтер {0}',
 
   // Users
   role: 'Роль',
-  owner: 'Владелец',
   admin: 'Админ',
   trader: 'Трейдер',
   dealer: 'Дилер',

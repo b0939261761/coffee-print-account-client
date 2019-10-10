@@ -1,47 +1,60 @@
 <template>
-  <div class = 'cartridges'>
-    <div class = 'cartridges__header'>
+  <PageTable>
+    <template #header>
       <InputText
         v-model = 'code'
         placeholder = 'XXXXXXXXX'
         :label = 'serialNumberText'
         inputmode = 'number'
       />
-    </div>
+    </template>
+    <template #body>
+      <TableWithAdditional
+        :items = 'itemsFiltered'
+        :columns = '$options.columns'
+        @edit = 'activeCartridgeId = $event'
+      />
+    </template>
 
-    <CartridgesTable
-      :items = 'itemsFiltered'
-      :active-remove-id = 'activeRemoveId'
-      :active-edit-id = 'activeEditId'
-      @remove = 'onRemove'
-      @edit = 'onEdit'
-      @showModalRemove = 'onShowModalRemove'
-      @showModalEdit = 'onShowModalEdit'
-    />
-    <div class = 'cartridges__footer'>
-      <BtnBack @click = 'onGoBack' />
-    </div>
-  </div>
+    <template #footer>
+      <BtnBack @click = '$router.push({ name: "mainPage" })' />
+    </template>
+
+    <template #modal>
+      <FormModalEditCartridge
+        v-if = 'activeCartridgeId !== null'
+        :cartridge-id = 'activeCartridgeId'
+        @success = 'onEdit'
+        @cancel = 'activeCartridgeId = null'
+      />
+    </template>
+  </PageTable>
 </template>
 
 <script>
-import { getCartridges, updateCartridge } from '@/utils/http';
-import CartridgesTable from '@/components/Cartridges/CartridgesTable.vue';
-import BtnBack from '@/components/Common/BtnBack.vue';
+import PageTable from '@/components/Common/Page/PageTable.vue';
 import InputText from '@/components/Base/InputText.vue';
+import BtnBack from '@/components/Common/BtnBack.vue';
+import TableWithAdditional from '@/components/Main/TableWithAdditional.vue';
+import FormModalEditCartridge from '@/components/Cartridges/FormModalEditCartridge.vue';
+
+import { numToFormatDateTime } from '@/utils/date';
+
+import { getCartridges, updateCartridge } from '@/utils/http';
 
 export default {
   name: 'Cartridges',
   components: {
-    CartridgesTable,
+    PageTable,
     InputText,
-    BtnBack
+    BtnBack,
+    TableWithAdditional,
+    FormModalEditCartridge
   },
   data: () => ({
     items: [],
     code: '',
-    activeRemoveId: 0,
-    activeEditId: 0
+    activeCartridgeId: null
   }),
   computed: {
     serialNumberText() {
@@ -54,56 +67,51 @@ export default {
     }
   },
   async created() {
-    const response = await getCartridges();
-    this.items = response.data || [];
+    this.$options.columns = {
+      main: [
+        { title: this.$t('serialNumber'), width: null, value: 'code' },
+        { title: this.$t('quantityResource'), width: '5rem', value: 'quantityResource' },
+        { title: this.$t('quantityPrinted'), width: '5rem', value: 'quantityPrinted' },
+        { title: this.$t('quantityBalance'), width: '5rem', value: 'quantityBalance' },
+        { title: this.$t('active'), width: '4rem', value: 'active' }
+      ],
+      additional: [
+        { title: this.$t('owner'), width: null, value: 'userEmail' }
+      ],
+      children: [
+        { title: this.$t('device'), width: null, value: 'device' },
+        { title: this.$t('lastActive'), width: '6rem', value: 'lastActive' },
+        { title: this.$t('quantityPrinted'), width: '4rem', value: 'quantityPrinted' }
+      ]
+    };
+
+    try {
+      const { data = [] } = await getCartridges();
+      this.items = data.map(this.transformItem);
+    } catch {}
   },
   methods: {
-    async onRemove(id) {
-      // const { data: { id: responseId = id } } = await removeCartridge(id);
-      // this.items = this.items.filter(el => el.id !== responseId);
-      // this.onShowModalRemove(0);
+    transformItem(item) {
+      return {
+        ...item,
+        quantityBalance: item.quantityResource - item.quantityPrinted,
+        active: item.active ? '\u2714' : '',
+        children: item.devices.map(elChild => ({
+          ...elChild,
+          device: `${elChild.code} ${elChild.city} (${elChild.description})`,
+          lastActive: numToFormatDateTime(elChild.lastActive)
+        }))
+      };
     },
-    async onEdit({ id, quantityResource, active }) {
-      const { data: response } = await updateCartridge({ id, quantityResource, active });
-      const item = this.items.find(el => el.id === id);
-      this.$set(item, 'quantityResource', response.quantityResource);
-      this.$set(item, 'active', response.active);
-      this.onShowModalEdit(0);
-    },
-    onShowModalRemove(id) {
-      this.activeRemoveId = id;
-    },
-    onShowModalEdit(id) {
-      this.activeEditId = id;
-    },
-    onGoBack() {
-      this.$router.push({ name: 'mainPage' });
+    async onEdit(obj) {
+      try {
+        const { data: cartridges } = await updateCartridge(obj);
+        const index = this.items.findIndex(el => el.id === this.activeCartridgeId);
+        if (index !== -1) this.$set(this.items, index, this.transformItem(cartridges));
+      } catch {}
+
+      this.activeCartridgeId = null;
     }
   }
 };
 </script>
-
-<style scoped>
-.cartridges {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  background-color: #f3b4ac;
-}
-
-.cartridges__header {
-  /* margin-bottom: -1rem; */
-  padding: 1rem 1rem 0;
-  border-radius: .5rem .5rem 0 0;
-  box-shadow: inset .2rem -.2rem 1rem 0 rgba(0, 0, 0, .2);
-}
-
-.cartridges__footer {
-  display: flex;
-  margin-bottom: -1rem;
-  padding: 1rem 1rem 0;
-  border-radius: .5rem .5rem 0 0;
-  box-shadow: inset .2rem -.2rem 1rem 0 rgba(0, 0, 0, .2);
-}
-</style>

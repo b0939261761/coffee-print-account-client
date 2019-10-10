@@ -8,6 +8,9 @@ export const formatDateTime = date => {
   return `${dd}.${MM}.${yyyy} ${hh}:${mm}:${ss}`;
 };
 
+export const numToFormatDateTime = number => formatDateTime(new Date(number));
+
 export default {
-  formatDateTime
+  formatDateTime,
+  numToFormatDateTime
 };

@@ -1,6 +1,6 @@
 <template>
   <PageBodyTable
-    :columns = 'columnsMain'
+    :columns = 'columns.main'
     :current-page = 'currentPage'
     :item-count = 'items.length'
     :rows-per-page = '$options.rowsPerPage'
@@ -10,31 +10,32 @@
       <template v-for = 'item in itemsOnPage'>
         <TableBodyRow
           :key = '`1${item.id}`'
-          :data-index = 'item.id'
-          @click = 'onRowClick'
+          @click = 'onRowClick(item.id)'
         >
           <TableBodyCell
-            v-for = '(value, index) in columnsMain'
+            v-for = '({ value }, index) in columns.main'
             :key = 'index'
-            v-text = 'item[columnsMain]'
+            v-text = 'item[value]'
           />
         </TableBodyRow>
 
         <TableBodyRow
           v-if = 'visibleAdditionals[item.id]'
           :key = '`2${item.id}`'
-          class = 'row-additional'
+          class = 'table-inside__table-body-row-additional'
         >
           <TableBodyCell
-            colspan = '3'
-            class = 'cell-additional'
+            :colspan = 'columns.main.length'
+            class = 'table-inside__table-body-cell-additional'
           >
-            <TableInside :columns = '$options.columnsAdditional'>
+            <TableInside :columns = 'columns.additional'>
               <template #body>
-                <TableBodyRow class = 'table-inside-body-row'>
-                  <TableBodyCell v-text = 'item.appVersionName' />
-                  <TableBodyCell v-text = 'item.city' />
-                  <TableBodyCell v-text = 'item.description' />
+                <TableBodyRow class = 'table-inside__table-body-row'>
+                  <TableBodyCell
+                    v-for = '({ value }, index) in columns.additional'
+                    :key = 'index'
+                    v-text = 'item[value]'
+                  />
                 </TableBodyRow>
               </template>
 
@@ -44,20 +45,20 @@
             </TableInside>
 
             <TableInside
-              v-if = 'item.cartridges.length'
-              :columns = '$options.columnsCartridges'
+              v-if = 'item.children.length'
+              :columns = 'columns.children'
             >
               <template #body>
                 <TableBodyRow
-                  v-for = 'value in item.cartridges'
-                  :key = 'value.id'
-                  class = 'table-inside-body-row'
+                  v-for = 'child in item.children'
+                  :key = 'child.id'
+                  class = 'table-inside__table-body-row'
                 >
-                  <TableBodyCell v-text = 'value.code' />
-                  <TableBodyCell v-text = 'value.quantityResource' />
-                  <TableBodyCell v-text = 'value.quantityPrinted' />
-                  <TableBodyCell v-text = 'value.quantityBalance' />
-                  <TableBodyCell v-text = 'value.lastActive' />
+                  <TableBodyCell
+                    v-for = '({ value }, index) in columns.children'
+                    :key = 'index'
+                    v-text = 'child[value]'
+                  />
                 </TableBodyRow>
               </template>
             </TableInside>
@@ -79,7 +80,7 @@ import TableInside from '@/components/Main/TableInside.vue';
 import pageBodyTable from '@/mixins/pageBodyTable';
 
 export default {
-  name: 'DevicesTable',
+  name: 'TableWithAdditional',
   components: {
     PageBodyTable,
     TableBodyRow,
@@ -88,16 +89,16 @@ export default {
     TableInside
   },
   mixins: [pageBodyTable],
-  // props: {
-  //   columnsMain: {
-  //     type: Array,
-  //     default: () => []
-  //   },
-  //   valuesMain: {
-  //     type: Array,
-  //     default: () => []
-  //   }
-  // },
+  props: {
+    items: {
+      required: true,
+      type: Array
+    },
+    columns: {
+      required: true,
+      type: Object
+    }
+  },
   data: () => ({
     visibleAdditionals: []
   }),
@@ -105,58 +106,28 @@ export default {
     currentPage: {
       immediate: true,
       handler() {
-        this.visibleAdditionals = Array(10);
+        this.visibleAdditionals = Array(this.$options.rowsPerPage);
       }
     }
   },
-  created() {
-    this.columnsMain = [
-      { title: this.$t('code'), width: '5rem', value: 'code' },
-      { title: this.$t('owner'), width: null, value: 'userEmail' },
-      { title: this.$t('quantityPrinted'), width: '5rem', value: 'quantityPrinted' }
-    ];
-
-    this.$options.columnsAdditional = [
-      { title: this.$t('appVersion'), width: '5rem' },
-      { title: this.$t('city'), width: null },
-      { title: this.$t('description'), width: null }
-    ];
-    this.$options.columnsCartridges = [
-      { title: this.$t('serialNumber'), width: null },
-      { title: this.$t('quantityResource'), width: '4rem' },
-      { title: this.$t('quantityPrinted'), width: '4rem' },
-      { title: this.$t('quantityBalance'), width: '4rem' },
-      { title: this.$t('lastActive'), width: '6rem' }
-    ];
-  },
   methods: {
-    onRowClick(event) {
-      const index = +event.currentTarget.dataset.index;
-      this.$set(this.visibleAdditionals, index, !this.visibleAdditionals[index]);
+    onRowClick(id) {
+      this.$set(this.visibleAdditionals, id, !this.visibleAdditionals[id]);
     }
   }
 };
 </script>
 
 <style scoped>
-.row-additional:not(:first-child) {
+.table-inside__table-body-row-additional:not(:first-child) {
   border-top: none;
 }
 
-.cell-additional {
+.table-inside__table-body-cell-additional {
   padding: 0;
 }
 
-.table-inside-body-row {
-  font-size: 1.1rem;
-}
-
-.table-inside-body-row:not(:first-child) {
+.table-inside__table-body-row:not(:first-child) {
   border-top: .1rem dashed rgba(134, 134, 134, .4);
 }
-
-/* .row:nth-child(4n),
-.row:nth-child(4n+3) {
-  background-color: rgba(214, 214, 214, .2);
-} */
 </style>

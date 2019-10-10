@@ -13,11 +13,15 @@ export default {
 
   // Shared
   email: 'Email',
+  password: 'Пароль',
   owner: 'Owner',
-
+  serialNumber: 'S/N',
+  quantityResource: 'Resource',
+  quantityPrinted: 'Printed',
+  quantityBalance: 'Balance',
+  lastActive: 'Last active',
 
   // Login
-  password: 'Пароль',
   signIn: 'Sign me in!',
 
   // MainPage
@@ -26,16 +30,16 @@ export default {
   users: 'Users',
   signOut: 'Sign out',
 
+  // Cartridges
+  device: 'Device',
+  active: 'Active',
+  modalTitleEditCartridge: 'Cartridge {0}',
+
   // Devices
   code: 'Code',
   appVersion: 'App version',
-  serialNumber: 'S/N',
   city: 'City',
   description: 'Description',
-  quantityResource: 'Resource',
-  quantityPrinted: 'Printed',
-  quantityBalance: 'Balance',
-  lastActive: 'Last active',
   modalTitleEditDevice: 'Device {0}',
 
   // Users
@@ -58,22 +62,7 @@ export default {
     },
     FAIL_AUTH: {
       title: 'Authentication error',
-      message: 'Incorrect еmail or password'
+      message: 'Incorrect email or password'
     }
-  },
-
-  // ----------------------------
-
-
-  active: 'Active',
-  coffeePrinter: 'Coffee printer',
-
-
-  modalTitleRemove: 'Удалить запись?',
-  modalMessageRemove: 'Картридж {0} будет удален',
-
-  modalTitleEditCartridge: 'Картридж [{0}]',
-
-
-  device: 'Принтер'
+  }
 };

@@ -18,6 +18,7 @@
     />
 
     <SelectCustom
+      v-if = '$store.state.auth.roleId < 4'
       v-model = 'userId'
       :data = 'usersData'
       placeholder = 'Выбирите родителя'

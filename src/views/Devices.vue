@@ -9,7 +9,7 @@
       />
     </template>
     <template #body>
-      <DevicesTable
+      <TableWithAdditional
         :items = 'itemsFiltered'
         :columns = '$options.columns'
         @edit = 'activeDeviceId = $event'
@@ -35,11 +35,11 @@
 import PageTable from '@/components/Common/Page/PageTable.vue';
 import InputText from '@/components/Base/InputText.vue';
 import BtnBack from '@/components/Common/BtnBack.vue';
-import DevicesTable from '@/components/Devices/DevicesTable.vue';
+import TableWithAdditional from '@/components/Main/TableWithAdditional.vue';
 import FormModalEditDevice from '@/components/Devices/FormModalEditDevice.vue';
 
 import { versionCodeToName } from '@/utils/tools';
-import { formatDateTime } from '@/utils/date';
+import { numToFormatDateTime } from '@/utils/date';
 
 import { getDevices, updateDevice } from '@/utils/http';
 
@@ -49,7 +49,7 @@ export default {
     PageTable,
     InputText,
     BtnBack,
-    DevicesTable,
+    TableWithAdditional,
     FormModalEditDevice
   },
   data: () => ({
@@ -99,10 +99,10 @@ export default {
       return {
         ...item,
         appVersionName: versionCodeToName(item.appVersionCode),
-        children: item.cartridges.map(elCart => ({
-          ...elCart,
-          lastActive: formatDateTime(new Date(elCart.lastActive)),
-          quantityBalance: elCart.quantityResource - elCart.quantityPrinted
+        children: item.cartridges.map(elChild => ({
+          ...elChild,
+          lastActive: numToFormatDateTime(elChild.lastActive),
+          quantityBalance: elChild.quantityResource - elChild.quantityPrinted
         }))
       };
     },

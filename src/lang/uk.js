@@ -11,9 +11,17 @@ export default {
   ok: 'Ok',
   cancel: 'Скасувати',
 
-  // Login
+  // Shared
   email: 'Email',
   password: 'Пароль',
+  owner: 'Власник',
+  serialNumber: 'S/N',
+  quantityResource: 'Ресурс',
+  quantityPrinted: 'Надруковано',
+  quantityBalance: 'Залишок',
+  lastActive: 'Активність',
+
+  // Login
   signIn: 'Увійти',
 
   // MainPage
@@ -22,21 +30,20 @@ export default {
   users: 'Користувачі',
   signOut: 'Вихід',
 
+  // Cartridges
+  device: 'Принтер',
+  active: 'Активний',
+  modalTitleEditCartridge: 'Картридж {0}',
+
   // Devices
   code: 'Код',
   appVersion: 'App версія',
-  serialNumber: 'S/N',
   city: 'Місто',
   description: 'Опис',
-  quantityResource: 'Ресурс',
-  quantityPrinted: 'Надруковано',
-  quantityBalance: 'Залишок',
-  lastActive: 'Активність',
   modalTitleEditDevice: 'Принтер {0}',
 
   // Users
   role: 'Роль',
-  owner: 'Власник',
   admin: 'Адмін',
   trader: 'Трейдер',
   dealer: 'Дилер',

@@ -1,100 +1,97 @@
 <template>
-  <FormModal @cancel = 'onCancel'>
-    <template slot = 'header'>
-      {{ modalTitleEditCartridgeText }}
-    </template>
+  <FormModalEdit
+    :disabled-success = 'disabledSuccess'
+    :title-text = 'titleText'
+    @cancel = '$emit("cancel")'
+    @success = 'onSuccess'
+  >
+    <InputText
+      v-model = 'quantityResource'
+      placeholder = 'XXXXX'
+      :label = 'quantityResourceText'
+      type = 'number'
+      inputmode = 'number'
+    />
 
-    <template slot = 'body'>
-      <InputText
-        v-model = 'quantityResourceChange'
-        placeholder = 'XXXXX'
-        :label = 'quantityResourceText'
-        type = 'number'
-        inputmode = 'number'
-      />
+    <InputSwitch
+      v-model = 'active'
+      :label = 'activeText'
+    />
 
-      <InputSwitch
-        v-model = 'activeChange'
-        :label = 'activeText'
-      />
-    </template>
-
-    <template slot ='footer'>
-      <BtnOk
-        class = 'btn-selected-picture--margin'
-        :disabled = 'quantityResourceChange === quantityResource && activeChange === active'
-        @click = 'onOk'
-      />
-
-      <BtnCancel
-        color-theme = 'outline'
-        @click = 'onCancel'
-      />
-    </template>
-  </FormModal>
+    <SelectCustom
+      v-if = '$store.state.auth.roleId < 4'
+      v-model = 'userId'
+      :data = 'usersData'
+      placeholder = 'Выбирите родителя'
+    />
+  </FormModalEdit>
 </template>
 
 <script>
-import FormModal from '@/components/Common/FormModal.vue';
+import FormModalEdit from '@/components/Main/FormModalEdit.vue';
 import InputText from '@/components/Base/InputText.vue';
 import InputSwitch from '@/components/Base/InputSwitch.vue';
-import BtnOk from '@/components/Common/BtnOk.vue';
-import BtnCancel from '@/components/Common/BtnCancel.vue';
+import SelectCustom from '@/components/Base/SelectCustom.vue';
+
+import { getCartridge, getUserChildren } from '@/utils/http';
 
 export default {
   name: 'FormModalEditCartridge',
   components: {
-    FormModal,
+    FormModalEdit,
     InputText,
     InputSwitch,
-    BtnOk,
-    BtnCancel
+    SelectCustom
   },
   props: {
-    code: {
-      required: true,
-      type: String
-    },
-    quantityResource: {
+    cartridgeId: {
       required: true,
       type: Number
-    },
-    active: {
-      required: true,
-      type: Boolean
     }
   },
-  data() {
-    return {
-      quantityResourceChange: this.quantityResource,
-      activeChange: this.active
-    };
-  },
+  data: () => ({
+    cartridge: {},
+    quantityResource: 0,
+    active: false,
+    userId: 0,
+    usersData: []
+  }),
   computed: {
-    modalTitleEditCartridgeText() {
-      return this.$t('modalTitleEditCartridge', [this.code]);
+    titleText() {
+      return this.$t('modalTitleEditCartridge', [this.cartridge.code]);
     },
     quantityResourceText() {
       return `${this.$t('quantityResource')}`;
     },
     activeText() {
       return `${this.$t('active')}`;
+    },
+    disabledSuccess() {
+      return false;
     }
   },
+  async created() {
+    try {
+      const { data: cartridge } = await getCartridge(this.cartridgeId);
+      this.cartridge = cartridge;
+
+      this.quantityResource = this.cartridge.quantityResource;
+      this.active = this.cartridge.active;
+      this.userId = this.cartridge.userId;
+
+      const { data: responseUsers } = await getUserChildren();
+      this.usersData = responseUsers.map(el => ({ value: el.id, label: el.email }));
+    } catch (err) {}
+  },
   methods: {
-    onOk() {
-      this.$emit('ok',
-        { quantityResource: this.quantityResourceChange, active: this.activeChange });
-    },
-    onCancel() {
-      this.$emit('cancel');
+    onSuccess() {
+      this.$emit('success', {
+        id: this.cartridge.id,
+        quantityResource: this.quantityResource,
+        active: this.active,
+        userId: this.userId
+      });
     }
   }
 };
 </script>
-
-<style scoped>
-.btn-selected-picture--margin {
-  margin-right: 1.6rem;
-}
-</style>

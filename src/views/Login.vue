@@ -9,7 +9,7 @@
       @submit.prevent = 'onSubmit'
     >
       <InputText
-        v-model = 'login'
+        v-model = 'username'
         type = 'email'
         placeholder = 'user@email.com'
         :label = 'emailText'
@@ -24,7 +24,7 @@
       />
 
       <BtnSignIn
-        :disabled = '!login || !password'
+        :disabled = '!username || !password'
         @click = 'onSubmit'
       />
     </form>
@@ -32,12 +32,12 @@
 </template>
 
 <script>
-import { authLogin } from '@/utils/http';
-
 import PageCustom from '@/components/Common/Page/PageCustom.vue';
 import InputText from '@/components/Base/InputText.vue';
 import BtnSignIn from '@/components/Login/BtnSignIn.vue';
 import SelectLanguage from '@/components/Common/SelectLanguage.vue';
+
+import { authLogin } from '@/utils/http';
 
 export default {
   name: 'Login',
@@ -48,10 +48,10 @@ export default {
     SelectLanguage
   },
   data: () => ({
-    login: '',
-    password: ''
-    // login: 'admin',
-    // password: '6k3vddrb2v'
+    // username: '',
+    // password: ''
+    username: 'admin',
+    password: '6k3vddrb2v'
   }),
   computed: {
     emailText() {
@@ -63,12 +63,11 @@ export default {
   },
   methods: {
     async onSubmit() {
-      const data = { username: this.login, password: this.password };
+      const { username, password } = this;
 
       try {
-        const { headers } = await authLogin(data);
+        const { headers } = await authLogin({ username, password });
         const { 'access-token': accessToken, 'refresh-token': refreshToken } = headers;
-
         this.$store.dispatch('auth/setTokens', { accessToken, refreshToken });
         this.$router.push({ name: 'mainPage' });
       } catch (err) {

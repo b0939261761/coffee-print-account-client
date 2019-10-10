@@ -3,19 +3,19 @@
     <TableCustom class = 'table-inside__table'>
       <TableColgroup>
         <TableCol
-          v-for = '(value, index) in columns'
+          v-for = '({ width }, index) in columns'
           :key = 'index'
-          :width = 'value.width'
+          :width = 'width'
         />
       </TableColgroup>
 
       <TableHead>
-        <TableHeadRow class = 'table-inside__head-row'>
+        <TableHeadRow class = 'table-inside__table-head-row'>
           <TableHeadCell
-            v-for = '(value, index) in columns'
+            v-for = '({ title }, index) in columns'
             :key = 'index'
             class = 'table-inside__table-head-cell'
-            v-text = 'value.title'
+            v-text = 'title'
           />
         </TableHeadRow>
       </TableHead>
@@ -74,11 +74,12 @@ export default {
   background-color: rgba(177, 177, 177, .1);
 }
 
-.table-inside {
+.table-inside__table {
   margin-right: .6rem;
+  font-size: 1.1rem;
 }
 
-.table-inside__head-row {
+.table-inside__table-head-row {
   height: 3rem;
 }
 

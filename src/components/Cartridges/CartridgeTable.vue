@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { formatDateTime } from '@/utils/date';
+import { numToFormatDateTime } from '@/utils/date';
 import BtnTableEdit from '@/components/Cartridges/BtnTableEdit.vue';
 import BtnTableRemove from '@/components/Cartridges/BtnTableRemove.vue';
 
@@ -113,7 +113,7 @@ export default {
         .map(el => ({
           deviceId: el.deviceId,
           device: `${el.deviceCode} ${el.deviceCity} (${el.deviceDescription})`,
-          lastActive: formatDateTime(new Date(el.lastActive)),
+          lastActive: numToFormatDateTime(el.lastActive),
           quantityPrinted: el.quantityPrinted
         }));
     }
