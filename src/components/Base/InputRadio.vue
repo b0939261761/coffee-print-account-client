@@ -52,7 +52,6 @@ export default {
   },
   created() {
     // eslint-disable-next-line no-underscore-dangle
-    console.log('created');
     this.$options.inputName = this._uid;
   },
   methods: {

@@ -9,18 +9,20 @@
       @submit.prevent = 'onSubmit'
     >
       <InputText
-        v-model = 'username'
-        type = 'email'
+        v-model = '$v.username.$model'
+        type = 'text'
         placeholder = 'user@email.com'
         :label = 'emailText'
+        :errors = '$v.username'
         inputmode = 'email'
       />
 
       <InputText
-        v-model = 'password'
+        v-model = '$v.password.$model'
         type = 'text'
-        placeholder = 'XXXXX'
+        placeholder = 'XXXXXXX'
         :label = 'passwordText'
+        :errors = '$v.password'
       />
 
       <BtnSignIn
@@ -32,12 +34,18 @@
 </template>
 
 <script>
+import {
+  required, maxLength, minLength, email
+} from 'vuelidate/lib/validators';
 import PageCustom from '@/components/Common/Page/PageCustom.vue';
 import InputText from '@/components/Base/InputText.vue';
 import BtnSignIn from '@/components/Login/BtnSignIn.vue';
 import SelectLanguage from '@/components/Common/SelectLanguage.vue';
 
 import { authLogin } from '@/utils/http';
+
+const passwordValidator = value => /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[+-_~!?@#$%^&*])[\w+-_~!?@#$%^&*]{8,}$/.test(value);
+
 
 export default {
   name: 'Login',
@@ -76,6 +84,19 @@ export default {
           this.password = '';
         }
       }
+    }
+  },
+  validations: {
+    username: {
+      required,
+      maxLength: maxLength(100),
+      email
+    },
+    password: {
+      required,
+      password: passwordValidator,
+      minLength: minLength(8),
+      maxLength: maxLength(30)
     }
   }
 };

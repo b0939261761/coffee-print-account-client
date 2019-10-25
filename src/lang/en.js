@@ -51,6 +51,14 @@ export default {
   modalTitleAddUser: 'Add user',
   modalTitleEditUser: 'User {0}',
 
+  validation: {
+    email: 'Field must be a valid email',
+    maxLength: 'Field may not be greater than {max} characters',
+    minLength: 'Field must be at least {min} characters',
+    required: 'Field is required',
+    password: 'Field must be between 8 and 30 characters with a combination of uppercase and lowercase letters, numbers and special characters ()[]+-*_;,!?~@#$%^&'
+  },
+
   errors: {
     HTTP: {
       title: 'Connection error',
