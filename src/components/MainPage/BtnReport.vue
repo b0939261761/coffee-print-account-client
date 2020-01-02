@@ -11,17 +11,17 @@
 
 <script>
 import Btn from '@/components/Base/Btn.vue';
-import Icon from '@/assets/brush.svg';
+import Icon from '@/assets/file-chart-pie.svg';
 
 export default {
-  name: 'BtnCartridges',
+  name: 'BtnReport',
   components: {
     Btn,
     Icon
   },
   computed: {
     label() {
-      return this.$t('cartridges');
+      return this.$t('report');
     }
   }
 };

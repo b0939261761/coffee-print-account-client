@@ -2,7 +2,7 @@
   <Btn
     :label = 'label'
     v-bind = '$attrs'
-    @click = 'onClick'
+    @click = '$emit("click")'
   >
     <template #icon>
       <Icon />
@@ -23,11 +23,6 @@ export default {
   computed: {
     label() {
       return this.$t('cancel');
-    }
-  },
-  methods: {
-    onClick() {
-      this.$emit('click');
     }
   }
 };

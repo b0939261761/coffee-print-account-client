@@ -39,7 +39,7 @@ import TableWithAdditional from '@/components/Main/TableWithAdditional.vue';
 import FormModalEditDevice from '@/components/Devices/FormModalEditDevice.vue';
 
 import { versionCodeToName } from '@/utils/tools';
-import { numToFormatDateTime } from '@/utils/date';
+import { formatDate } from '@/utils/date';
 
 import { getDevices, updateDevice } from '@/utils/http';
 
@@ -83,14 +83,12 @@ export default {
         { title: this.$t('serialNumber'), width: null, value: 'code' },
         { title: this.$t('quantityResource'), width: '4rem', value: 'quantityResource' },
         { title: this.$t('quantityPrinted'), width: '4rem', value: 'quantityPrinted' },
-        { title: this.$t('quantityBalance'), width: '4rem', value: 'quantityBalance' },
-        { title: this.$t('lastActive'), width: '6rem', value: 'lastActive' }
+        { title: this.$t('lastActive'), width: '9rem', value: 'lastActive' }
       ]
     };
 
     try {
-      const { data = [] } = await getDevices();
-
+      const { data } = await getDevices();
       this.items = data.map(this.transformItem);
     } catch {}
   },
@@ -101,19 +99,19 @@ export default {
         appVersionName: versionCodeToName(item.appVersionCode),
         children: item.cartridges.map(elChild => ({
           ...elChild,
-          lastActive: numToFormatDateTime(elChild.lastActive),
-          quantityBalance: elChild.quantityResource - elChild.quantityPrinted
+          lastActive: formatDate('DD.MM.YY HH:mm', elChild.lastActive)
         }))
       };
     },
     async onEdit(obj) {
       try {
         const { data: device } = await updateDevice(obj);
-        const index = this.items.findIndex(el => el.id === this.activeDeviceId);
+        if (!device) return;
+        const index = this.items.findIndex(el => el.id === device.id);
         if (index !== -1) this.$set(this.items, index, this.transformItem(device));
-      } catch {}
-
-      this.activeDeviceId = null;
+      } finally {
+        this.activeDeviceId = null;
+      }
     }
   }
 };

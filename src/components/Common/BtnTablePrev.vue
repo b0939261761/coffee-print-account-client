@@ -2,7 +2,7 @@
   <BtnTable
     :title = 'title'
     color-theme = 'outline'
-    @click = 'onClick'
+    @click = '$emit("click")'
   >
     <template #icon>
       <Icon />
@@ -23,11 +23,6 @@ export default {
   computed: {
     title() {
       return this.$t('previous');
-    }
-  },
-  methods: {
-    onClick() {
-      this.$emit('click');
     }
   }
 };

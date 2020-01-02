@@ -28,9 +28,6 @@ module.exports = {
       }
     ],
 
-    // enable next version plugin
-    // 'vue/dot-location': ['error', 'property'],
-
     'vue/eqeqeq': ['error', 'always', { null: 'ignore' }],
     'vue/key-spacing': ['error', { beforeColon: false, afterColon: true }],
 
@@ -44,9 +41,6 @@ module.exports = {
 
     'vue/no-boolean-default': ['error', 'default-false'],
 
-    // enable next version plugin
-    // 'vue/no-empty-pattern': 'error',
-
     'vue/no-restricted-syntax': [
       'error',
       {
@@ -54,7 +48,7 @@ module.exports = {
         'message': 'Call expressions are not allowed.'
       },
       {
-        'selector': 'VElement VAttribute[key.name != "on"] CallExpression',
+        'selector': 'VElement VAttribute[key.name.name != "on"] CallExpression',
         'message': 'Call expressions are not allowed.'
       }
     ],
@@ -81,6 +75,31 @@ module.exports = {
     ],
 
     'vue/v-on-function-call': ['error', 'never'],
+
+    'vue/no-empty-pattern': 'error',
+
+    'vue/dot-location': ['error', 'property'],
+
+    'vue/keyword-spacing': ['error', {
+      before: true,
+      after: true,
+      overrides: {
+        return: { after: true },
+        throw: { after: true },
+        case: { after: true }
+      }
+    }],
+
+    // doesn't work rule
+    // 'vue/no-deprecated-scope-attribute': 'error',
+
+    'vue/valid-v-slot': 'error',
+
+    "vue/v-slot-style": ["error", {
+      atComponent: 'v-slot',
+      default: 'shorthand',
+      named: 'shorthand'
+    }],
 
     // -------------------------------------------------------
 
@@ -113,6 +132,34 @@ module.exports = {
 
     // disallow empty block statements (no-empty)
     'no-empty': ['error', { allowEmptyCatch: true }],
+
+    'no-debugger': 'warn',
+
+    'object-curly-newline': ['error', {
+      ObjectExpression: { minProperties: 8, multiline: true, consistent: true },
+      ObjectPattern: { minProperties: 8, multiline: true, consistent: true },
+      ImportDeclaration: { minProperties: 8, multiline: true, consistent: true },
+      ExportDeclaration: { minProperties: 8, multiline: true, consistent: true },
+    }],
+
+
+    'no-restricted-syntax': [
+      'error',
+      {
+        selector: 'ForInStatement',
+        message: 'for..in loops iterate over the entire prototype chain, which is virtually never what you want. Use Object.{keys,values,entries}, and iterate over the resulting array.',
+      },
+      {
+        selector: 'LabeledStatement',
+        message: 'Labels are a form of GOTO; using them makes code confusing and hard to maintain and understand.',
+      },
+      {
+        selector: 'WithStatement',
+        message: '`with` is disallowed in strict mode because it makes code impossible to predict and optimize.',
+      },
+    ],
+
+    'no-underscore-dangle': ['error', { allowAfterThis: true }],
 
   },
   parserOptions: {

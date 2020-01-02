@@ -1,6 +1,6 @@
 <template>
   <div class = 'page-body-main'>
-    <PageBodyHeader>
+    <PageBodyHeader v-if = '$slots.header'>
       <slot name = 'header' />
     </PageBodyHeader>
     <PageBodyBody>

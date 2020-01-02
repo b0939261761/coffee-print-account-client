@@ -38,7 +38,7 @@ import BtnBack from '@/components/Common/BtnBack.vue';
 import TableWithAdditional from '@/components/Main/TableWithAdditional.vue';
 import FormModalEditCartridge from '@/components/Cartridges/FormModalEditCartridge.vue';
 
-import { numToFormatDateTime } from '@/utils/date';
+import { formatDate } from '@/utils/date';
 
 import { getCartridges, updateCartridge } from '@/utils/http';
 
@@ -99,18 +99,18 @@ export default {
         children: item.devices.map(elChild => ({
           ...elChild,
           device: `${elChild.code} ${elChild.city} (${elChild.description})`,
-          lastActive: numToFormatDateTime(elChild.lastActive)
+          lastActive: formatDate('DD.MM.YY HH:mm', elChild.lastActive)
         }))
       };
     },
     async onEdit(obj) {
       try {
         const { data: cartridges } = await updateCartridge(obj);
-        const index = this.items.findIndex(el => el.id === this.activeCartridgeId);
+        const index = this.items.findIndex(el => el.id === cartridges.id);
         if (index !== -1) this.$set(this.items, index, this.transformItem(cartridges));
-      } catch {}
-
-      this.activeCartridgeId = null;
+      } finally {
+        this.activeCartridgeId = null;
+      }
     }
   }
 };

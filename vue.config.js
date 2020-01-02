@@ -1,3 +1,5 @@
+const webpack = require('webpack');
+
 module.exports = {
   productionSourceMap: false,
 
@@ -6,7 +8,12 @@ module.exports = {
   },
 
   configureWebpack: {
-    devtool: 'source-map'
+    devtool: 'source-map',
+    plugins: [
+      new webpack.IgnorePlugin({
+        resourceRegExp: /moment$/
+      })
+    ]
   },
 
   chainWebpack: config => {

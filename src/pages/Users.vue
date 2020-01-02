@@ -17,10 +17,11 @@
 
     <template #footer>
       <BtnBack
-        margin-right = '1rem'
+        :margin-right = '$store.state.auth.roleId < 4 ? "1rem" : "0"'
         @click = '$router.push({ name: "mainPage" })'
       />
       <BtnAdd
+        v-if = '$store.state.auth.roleId < 4'
         margin-left = '1rem'
         @click = 'activeUserId = 0'
       />
@@ -76,19 +77,25 @@ export default {
   async mounted() {
     try {
       const { data = [] } = await getUsers();
-      this.items = data.map(el => ({ ...el, roleName: this.$t(el.roleName) }));
+      this.items = data.map(this.transformItem);
     } catch {}
   },
   methods: {
+    transformItem(item) {
+      return {
+        ...item,
+        roleName: this.$t(item.roleName)
+      };
+    },
     async onEdit(obj) {
       try {
         if (this.activeUserId) {
           const { data: user } = await updateUser(obj);
           const index = this.items.findIndex(el => el.id === this.activeUserId);
-          if (index !== -1) this.$set(this.items, index, user);
+          if (index !== -1) this.$set(this.items, index, this.transformItem(user));
         } else {
           const { data: user } = await addUser(obj);
-          this.items.unshift(user);
+          this.items.unshift(this.transformItem(user));
         }
       } catch {}
 

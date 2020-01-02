@@ -79,7 +79,7 @@ export default {
 
       const { data: responseUsers } = await getUserChildren();
       this.usersData = responseUsers.map(el => ({ value: el.id, label: el.email }));
-    } catch (err) {}
+    } catch {}
   },
   methods: {
     onSuccess() {

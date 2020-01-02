@@ -1,7 +1,7 @@
 <template>
   <Btn
     :label = 'label'
-    @click = 'onClick'
+    @click = '$emit("click")'
   >
     <template #icon>
       <Icon />
@@ -22,11 +22,6 @@ export default {
   computed: {
     label() {
       return this.$t('signOut');
-    }
-  },
-  methods: {
-    onClick() {
-      this.$emit('click');
     }
   }
 };

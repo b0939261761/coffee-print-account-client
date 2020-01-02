@@ -11,6 +11,19 @@ export default {
   ok: 'Ok',
   cancel: 'Скасувати',
 
+  // Date Piker
+  datePicker: {
+    mask: 'дд.мм.гггг',
+    ariaLabel: 'Використовуйте клавіші зі стрілками, щоб вибрати дату',
+    calendar: {
+      previousMonth: 'Попередній Місяць',
+      nextMonth: 'Наступний Місяць',
+      months: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
+      weekdays: ['Воскресенье', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця', 'Субота'],
+      weekdaysShort: ['Ндл', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт']
+    }
+  },
+
   // Shared
   email: 'Email',
   password: 'Пароль',
@@ -28,6 +41,7 @@ export default {
   cartridges: 'Картриджі',
   devices: 'Принтера',
   users: 'Користувачі',
+  report: 'Звіт',
   signOut: 'Вихід',
 
   // Cartridges
@@ -50,6 +64,11 @@ export default {
   customer: 'Клієнт',
   modalTitleAddUser: 'Додати користувача',
   modalTitleEditUser: 'Редагувати {0}',
+
+  // Report
+  download: 'Завантажити',
+  dateFrom: 'Дата з',
+  dateBy: 'Дата по',
 
   errors: {
     HTTP: {

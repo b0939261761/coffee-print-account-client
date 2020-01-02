@@ -11,6 +11,19 @@ export default {
   ok: 'Ok',
   cancel: 'Отмена',
 
+  // Date Piker
+  datePicker: {
+    mask: 'дд.мм.гггг',
+    ariaLabel: 'Используйте клавиши со стрелками, чтобы выбрать дату',
+    calendar: {
+      previousMonth: 'Предыдущий Месяц',
+      nextMonth: 'Следующий Месяц',
+      months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+      weekdays: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+      weekdaysShort: ['Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт']
+    }
+  },
+
   // Shared
   email: 'Email',
   password: 'Пароль',
@@ -28,6 +41,7 @@ export default {
   cartridges: 'Картриджи',
   devices: 'Принтера',
   users: 'Пользователи',
+  report: 'Отчет',
   signOut: 'Выход',
 
   // Cartridges
@@ -50,6 +64,11 @@ export default {
   customer: 'Клиент',
   modalTitleAddUser: 'Добавить пользователя',
   modalTitleEditUser: 'Редактировать {0}',
+
+  // Report
+  download: 'Загрузить',
+  dateFrom: 'Дата с',
+  dateBy: 'Дата по',
 
   errors: {
     HTTP: {

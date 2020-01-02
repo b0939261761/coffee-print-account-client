@@ -103,6 +103,9 @@ export default {
     visibleAdditionals: []
   }),
   watch: {
+    items() {
+      this.currentPage = 1;
+    },
     currentPage: {
       immediate: true,
       handler() {

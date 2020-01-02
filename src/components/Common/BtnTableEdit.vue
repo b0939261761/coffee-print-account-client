@@ -1,7 +1,7 @@
 <template>
   <BtnTable
     :title = 'title'
-    @click = 'onClick'
+    @click = '$emit("click")'
   >
     <template #icon>
       <Icon />
@@ -22,11 +22,6 @@ export default {
   computed: {
     title() {
       return this.$t('edit');
-    }
-  },
-  methods: {
-    onClick() {
-      this.$emit('click');
     }
   }
 };
